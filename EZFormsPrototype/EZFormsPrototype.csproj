@@ -193,6 +193,7 @@
     <Content Include="Views\Form\Details.cshtml" />
     <Content Include="Views\Form\Edit.cshtml" />
     <Content Include="Views\Form\Index.cshtml" />
+    <Content Include="Views\Form\NewField.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

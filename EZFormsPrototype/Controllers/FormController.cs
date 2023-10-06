@@ -116,6 +116,11 @@ namespace EZFormsPrototype.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult NewField()
+        {
+            return View();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
