@@ -13,7 +13,7 @@ namespace EZFormsPrototype.Controllers
 {
     public class FormController : Controller
     {
-        private FormContext db = new FormContext();
+        private EZFormsPrototype.DAL.FormContext db = new EZFormsPrototype.DAL.FormContext();
 
         // GET: Form
         public ActionResult Index()
