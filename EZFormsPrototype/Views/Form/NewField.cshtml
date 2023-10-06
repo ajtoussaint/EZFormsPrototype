@@ -1,12 +1,12 @@
 ﻿
-@model EZFormsPrototype.Models.Field
+@model EZFormsPrototype.Models.Form
 
 @{
     ViewBag.Title = "New Field";
 
 }
 
-<h2>@ViewBag.Title</h2>
+<h2>Creating new field for: @Html.DisplayFor(model => model.Title)</h2>
 
 @using (Html.BeginForm())
 {

@@ -116,9 +116,19 @@ namespace EZFormsPrototype.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult NewField()
+        public ActionResult NewField(int? id)
+
         {
-            return View();
+            if (id == null)
+            {
+                return View();
+            }
+            Form form = db.Forms.Find(id);
+            if (form == null)
+            {
+                return HttpNotFound();
+            }
+            return View(form);
         }
 
         protected override void Dispose(bool disposing)
