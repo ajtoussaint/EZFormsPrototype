@@ -71,6 +71,7 @@ namespace EZFormsPrototype.Controllers
             {
                 return HttpNotFound();
             }
+            form.Fields = db.Fields.Where(f => f.FormID == id).ToList();
             return View(form);
         }
 
@@ -116,19 +117,9 @@ namespace EZFormsPrototype.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult NewField(int? id)
-
+        public ActionResult Field(int id)
         {
-            if (id == null)
-            {
-                return View();
-            }
-            Form form = db.Forms.Find(id);
-            if (form == null)
-            {
-                return HttpNotFound();
-            }
-            return View(form);
+            return RedirectToAction("Create", "Field", new { id = id });
         }
 
         protected override void Dispose(bool disposing)
