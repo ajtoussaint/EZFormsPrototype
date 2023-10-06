@@ -6,8 +6,8 @@ namespace EZFormsPrototype.Models
 {
     public class Form
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int FormID { get; set; }
+        [Key]
+        public int ID { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public virtual ICollection<Field> Fields { get; set; }

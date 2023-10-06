@@ -6,7 +6,8 @@ namespace EZFormsPrototype.Models
 {
     public class Field
     {
-        public int FieldID { get; set; }
+        [Key]
+        public int ID { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
 
