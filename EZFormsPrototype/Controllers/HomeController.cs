@@ -19,5 +19,10 @@ namespace EZFormsPrototype.Controllers
 
             return View();
         }
+
+        public ActionResult Laboratory()
+        {
+            return View();
+        }
     }
 }

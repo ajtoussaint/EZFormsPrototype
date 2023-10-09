@@ -1,7 +1,6 @@
 ﻿
 @{
     ViewBag.Title = "Laboratory";
-    Layout = "CreateField";
     //TODO: Test dynamic jQuery form inputs here
 
     //TODO: Create Flag Generator
@@ -10,4 +9,42 @@
 }
 
 <h2>Laboratory</h2>
+<br />
 
+<h3>Test Form</h3>
+<form method="post">
+    <div id="newRow">
+        <input type="hidden" id="total" value="0" />
+    </div>
+    <button id="addRow" type="button" class="btn btn-info">Add</button>
+    <input type="submit" class="btn btn-primary" value="Post" />
+</form>
+
+@section Scripts
+{
+    <script>
+
+    $("#addRow").click(function ()
+    {
+        var rowCount = parseInt($("#total").val());
+        rowCount++;
+        $("#total").val(rowCount);
+        var html = '';
+        html += '<div id="inputRow">';
+        html += '<input type="text" name="[' + (rowCount - 1) + '].Name"  />';
+        html += '<input type="number" name="[' + (rowCount - 1) + '].Age"  />';
+        //add more inputs here...
+        html += '<button id="removeRow" type="button" class="btn btn-danger">Remove</button>';
+        html += '</div>';
+
+        $('#newRow').append(html);
+    });
+    $(document).on('click', '#removeRow', function ()
+    {
+        var rowCount = parseInt($("#total").val());
+        rowCount--;
+        $("#total").val(rowCount);
+        $(this).closest('#inputRow').remove();
+    });
+    </script>
+}  
