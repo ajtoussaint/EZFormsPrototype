@@ -35,6 +35,7 @@
     @foreach(var field in Model.Fields)
     {
         <h2>@Html.DisplayFor(Modelitem => field.Name)</h2>
+        <p>@Html.DisplayFor(Modelitem => field.Type)</p>
     }
 
     <div>

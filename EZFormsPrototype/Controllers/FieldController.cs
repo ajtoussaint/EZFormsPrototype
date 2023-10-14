@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using EZFormsPrototype.DAL;
 using EZFormsPrototype.Models;
+using EZFormsPrototype.Utility;
 
 namespace EZFormsPrototype.Controllers
 {
@@ -26,6 +27,10 @@ namespace EZFormsPrototype.Controllers
 
             ViewBag.ParentID = parentForm.ID;
             ViewBag.ParentTitle = parentForm.Title;
+
+            //Create a list of possible field types to pass to the type input dropdown
+            ViewBag.Type = DropDownListUtility.GetFieldTypeDropdown("number");
+
             return View();
         }
 
