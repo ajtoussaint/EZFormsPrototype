@@ -79,6 +79,30 @@ namespace EZFormsPrototype.Controllers
             return View(field);
         }
 
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Field field = db.Fields.Find(id);
+            if (field == null)
+            {
+                return HttpNotFound();
+            }
+            return View(field);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Field field = db.Fields.Find(id);
+            db.Fields.Remove(field);
+            db.SaveChanges();
+            return RedirectToAction("Edit", "Form", new { id = field.FormID });
+        }
+
         public ActionResult ParentForm(int id)
         {
             return RedirectToAction("Edit", "Form", new { id = id });

@@ -32,15 +32,21 @@
             @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
         </div>
     </div>
-    @foreach(var field in Model.Fields)
+    @foreach (var field in Model.Fields)
     {
         <h2>@Html.DisplayFor(Modelitem => field.Name)</h2>
         <p>@Html.DisplayFor(Modelitem => field.Type)</p>
-        @Html.ActionLink("Edit", "EditField", new {id = field.ID})
+        <p>
+            @Html.ActionLink("Edit", "EditField", new { id = field.ID })
+            |
+            @Html.ActionLink("Delete", "DeleteField", new { id = field.ID })
+        </p>
+        
+        
     }
 
     <div>
-        @Html.ActionLink("Add new field", "CreateField", new {id = Model.ID})
+        @Html.ActionLink("Add new field", "CreateField", new { id = Model.ID })
     </div>
 
     <div class="form-group">
