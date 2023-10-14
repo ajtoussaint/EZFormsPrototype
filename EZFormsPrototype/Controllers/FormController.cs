@@ -117,9 +117,14 @@ namespace EZFormsPrototype.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Field(int id)
+        public ActionResult CreateField(int id)
         {
             return RedirectToAction("Create", "Field", new { id = id });
+        }
+
+        public ActionResult EditField(int id)
+        {
+            return RedirectToAction("Edit", "Field", new { id = id });
         }
 
         protected override void Dispose(bool disposing)

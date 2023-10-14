@@ -36,10 +36,11 @@
     {
         <h2>@Html.DisplayFor(Modelitem => field.Name)</h2>
         <p>@Html.DisplayFor(Modelitem => field.Type)</p>
+        @Html.ActionLink("Edit", "EditField", new {id = field.ID})
     }
 
     <div>
-        @Html.ActionLink("Add new field", "Field", new {id = Model.ID})
+        @Html.ActionLink("Add new field", "CreateField", new {id = Model.ID})
     </div>
 
     <div class="form-group">

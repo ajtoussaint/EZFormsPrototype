@@ -46,5 +46,42 @@ namespace EZFormsPrototype.Controllers
             }
             return View();
         }
+
+        public ActionResult Edit(int? id) 
+        {
+            if(id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Field field = db.Fields.Find(id);
+            if(field == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.Type = DropDownListUtility.GetFieldTypeDropdown("number");
+            //TODO: Explain why field is not passed as a variable to view?
+            return View(field);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "ID,FormID,Name,Type")] Field field)
+        {
+            if(ModelState.IsValid)
+            {
+                db.Entry(field).State = EntityState.Modified;
+                db.SaveChanges();
+                //send to the parent form edit page
+                return RedirectToAction("Edit", "Form", new { id = field.FormID });
+            }
+            //go back to edit when invalid model is posted
+            ViewBag.Type = DropDownListUtility.GetFieldTypeDropdown("number");
+            return View(field);
+        }
+
+        public ActionResult ParentForm(int id)
+        {
+            return RedirectToAction("Edit", "Form", new { id = id });
+        }
     }
 }

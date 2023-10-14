@@ -1,12 +1,12 @@
 ﻿@model EZFormsPrototype.Models.Field
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Edit";
 }
 
-<h2>Create Field for @ViewBag.ParentTitle</h2>
+<h2>Edit</h2>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
@@ -14,8 +14,10 @@
         <h4>Field</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+
         <div class="form-group">
-                @Html.HiddenFor(model => model.FormID, new { Value = ViewBag.ParentID})
+            @Html.HiddenFor(model => model.FormID)
         </div>
 
         <div class="form-group">
@@ -36,12 +38,12 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to form", "ParentForm", new { id = ViewBag.ParentID })
+    @Html.ActionLink("Back to form", "ParentForm", new { id = Model.FormID})
 </div>
