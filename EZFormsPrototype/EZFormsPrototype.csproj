@@ -143,10 +143,16 @@
     <Compile Include="Migrations\202310161559537_FormItems.designer.cs">
       <DependentUpon>202310161559537_FormItems.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202310161637252_Tables.cs" />
+    <Compile Include="Migrations\202310161637252_Tables.designer.cs">
+      <DependentUpon>202310161637252_Tables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Field.cs" />
     <Compile Include="Models\Form.cs" />
     <Compile Include="Models\FormItem.cs" />
+    <Compile Include="Models\Table.cs" />
+    <Compile Include="Models\TableField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\DropDownListUtility.cs" />
   </ItemGroup>
@@ -247,6 +253,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202310161559537_FormItems.resx">
       <DependentUpon>202310161559537_FormItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310161637252_Tables.resx">
+      <DependentUpon>202310161637252_Tables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
