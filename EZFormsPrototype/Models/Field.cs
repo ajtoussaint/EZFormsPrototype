@@ -4,12 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EZFormsPrototype.Models
 {
-    public class Field
+    public class Field : FormItem
     {
-        [Key]
-        public int ID { get; set; }
-        public int FormID { get; set; }
-        public string Name { get; set; }
         public string Type { get; set; }
 
         public virtual Form ParentForm { get; set; }

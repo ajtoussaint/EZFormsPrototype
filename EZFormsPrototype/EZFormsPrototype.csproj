@@ -139,9 +139,14 @@
     <Compile Include="Migrations\202310141605021_InitialCreate.designer.cs">
       <DependentUpon>202310141605021_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202310161559537_FormItems.cs" />
+    <Compile Include="Migrations\202310161559537_FormItems.designer.cs">
+      <DependentUpon>202310161559537_FormItems.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Field.cs" />
     <Compile Include="Models\Form.cs" />
+    <Compile Include="Models\FormItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\DropDownListUtility.cs" />
   </ItemGroup>
@@ -239,6 +244,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202310141605021_InitialCreate.resx">
       <DependentUpon>202310141605021_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310161559537_FormItems.resx">
+      <DependentUpon>202310161559537_FormItems.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
