@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class FormItemReset : DbMigration
     {
         public override void Up()
         {
@@ -12,9 +12,12 @@
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
-                        FormID = c.Int(nullable: false),
                         Name = c.String(),
+                        FormID = c.Int(nullable: false),
+                        FormOrder = c.Int(nullable: false),
                         Type = c.String(),
+                        TableID = c.Int(),
+                        Discriminator = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.Form", t => t.FormID, cascadeDelete: true)

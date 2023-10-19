@@ -36,10 +36,11 @@ namespace EZFormsPrototype.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include ="ID,FormID,Name,Type")] Field field)
+        public ActionResult Create([Bind(Include ="ID,FormID,Name,Type,FormOrder")] Field field)
         {
             if(ModelState.IsValid)
             {
+                //Check if the user is creating a table and redirect to the table controller if they are
                 db.Fields.Add(field);
                 db.SaveChanges();
                 return RedirectToAction("Edit", "Form", new { id = field.FormID });

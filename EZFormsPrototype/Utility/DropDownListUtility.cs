@@ -19,6 +19,7 @@ namespace EZFormsPrototype.Utility
                 new SelectListItem { Text = "Time", Value = "time", Selected = ("time" == selectedValue)},
                 new SelectListItem { Text = "Date Time", Value = "dateTime", Selected = ("dateTime" == selectedValue)},
                 new SelectListItem { Text = "Dollar Amount", Value = "dollarAmount", Selected = ("dollarAmount" == selectedValue)},
+                new SelectListItem { Text = "Table", Value = "table", Selected = ("table" == selectedValue)},
             };
         }
     }

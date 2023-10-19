@@ -7,13 +7,13 @@ namespace EZFormsPrototype.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class InitialCreate : IMigrationMetadata
+    public sealed partial class FormItemReset : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(FormItemReset));
         
         string IMigrationMetadata.Id
         {
-            get { return "202310141605021_InitialCreate"; }
+            get { return "202310191017311_FormItemReset"; }
         }
         
         string IMigrationMetadata.Source

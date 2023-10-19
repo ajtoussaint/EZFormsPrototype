@@ -12,6 +12,8 @@ namespace EZFormsPrototype.DAL
 
         public DbSet<Form> Forms { get; set; }
         public DbSet<Field> Fields { get; set; }
+        public DbSet<TableField> TableFields { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
