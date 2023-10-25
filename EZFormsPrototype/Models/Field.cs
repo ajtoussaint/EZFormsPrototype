@@ -12,5 +12,8 @@ namespace EZFormsPrototype.Models
         [Range(0, int.MaxValue)]
         public int FormOrder { get; set; }
         public string Type { get; set; }
+
+        public virtual List<string> TableFieldNames {  get; set; }
+        public virtual List<string> TableFieldTypes { get; set; }
     }
 }

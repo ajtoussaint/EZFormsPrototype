@@ -36,11 +36,25 @@ namespace EZFormsPrototype.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include ="ID,FormID,Name,Type,FormOrder")] Field field)
+        public ActionResult Create([Bind(Include ="ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes")] Field field)
         {
+            
             if(ModelState.IsValid)
             {
                 //Check if the user is creating a table and make subfields if they are
+                if(field.Type == "table")
+                {
+                    for(int i = 0; i<field.TableFieldNames.Count; i++)
+                    {
+                        TableField tf = new TableField();
+                        tf.TableID = field.ID;
+                        tf.Name = field.TableFieldNames[i];
+                        tf.Type = field.TableFieldTypes[i];
+                        tf.FormID = field.FormID;
+                        tf.FormOrder = i;
+                        db.TableFields.Add(tf);
+                    }
+                }
                 db.Fields.Add(field);
                 db.SaveChanges();
                 return RedirectToAction("Edit", "Form", new { id = field.FormID });
