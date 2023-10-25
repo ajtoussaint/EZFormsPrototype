@@ -40,7 +40,7 @@ namespace EZFormsPrototype.Controllers
         {
             if(ModelState.IsValid)
             {
-                //Check if the user is creating a table and redirect to the table controller if they are
+                //Check if the user is creating a table and make subfields if they are
                 db.Fields.Add(field);
                 db.SaveChanges();
                 return RedirectToAction("Edit", "Form", new { id = field.FormID });
@@ -91,6 +91,8 @@ namespace EZFormsPrototype.Controllers
             {
                 return HttpNotFound();
             }
+            Form parentForm = db.Forms.Find(field.FormID);
+            ViewBag.ParentForm = parentForm.Title;
             return View(field);
         }
 
