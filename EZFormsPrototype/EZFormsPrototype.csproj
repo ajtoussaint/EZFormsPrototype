@@ -139,9 +139,18 @@
     <Compile Include="Migrations\202310191017311_FormItemReset.designer.cs">
       <DependentUpon>202310191017311_FormItemReset.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202310251846189_FormFields.cs" />
+    <Compile Include="Migrations\202310251846189_FormFields.designer.cs">
+      <DependentUpon>202310251846189_FormFields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310251855423_minorTableFormUpdate.cs" />
+    <Compile Include="Migrations\202310251855423_minorTableFormUpdate.designer.cs">
+      <DependentUpon>202310251855423_minorTableFormUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Field.cs" />
     <Compile Include="Models\Form.cs" />
+    <Compile Include="Models\FormField.cs" />
     <Compile Include="Models\TableField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\DropDownListUtility.cs" />
@@ -201,7 +210,6 @@
     <Content Include="Views\Form\Details.cshtml" />
     <Content Include="Views\Form\Edit.cshtml" />
     <Content Include="Views\Form\Index.cshtml" />
-    <Content Include="Views\Form\NewField.cshtml" />
     <Content Include="Views\Field\Create.cshtml" />
     <Content Include="Views\Home\Laboratory.cshtml" />
     <Content Include="Views\Field\Edit.cshtml" />
@@ -241,6 +249,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202310191017311_FormItemReset.resx">
       <DependentUpon>202310191017311_FormItemReset.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310251846189_FormFields.resx">
+      <DependentUpon>202310251846189_FormFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310251855423_minorTableFormUpdate.resx">
+      <DependentUpon>202310251855423_minorTableFormUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

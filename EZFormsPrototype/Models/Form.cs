@@ -11,7 +11,7 @@ namespace EZFormsPrototype.Models
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public virtual ICollection<Field> Fields { get; set; }
+        public virtual ICollection<FormField> Fields { get; set; }
 
     }
 }

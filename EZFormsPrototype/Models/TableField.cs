@@ -6,7 +6,6 @@ namespace EZFormsPrototype.Models
 {
     public class TableField : Field
     {
-        public int FormOrder = -1;
         public int TableID {  get; set; }
 
     }

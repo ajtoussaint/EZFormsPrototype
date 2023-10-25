@@ -36,7 +36,7 @@ namespace EZFormsPrototype.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include ="ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes")] Field field)
+        public ActionResult Create([Bind(Include ="ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes")] FormField field)
         {
             
             if(ModelState.IsValid)
@@ -55,7 +55,7 @@ namespace EZFormsPrototype.Controllers
                         db.TableFields.Add(tf);
                     }
                 }
-                db.Fields.Add(field);
+                db.FormFields.Add(field);
                 db.SaveChanges();
                 return RedirectToAction("Edit", "Form", new { id = field.FormID });
             }
@@ -68,7 +68,7 @@ namespace EZFormsPrototype.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Field field = db.Fields.Find(id);
+            FormField field = db.FormFields.Find(id);
             if(field == null)
             {
                 return HttpNotFound();
@@ -80,7 +80,7 @@ namespace EZFormsPrototype.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,FormID,Name,Type")] Field field)
+        public ActionResult Edit([Bind(Include = "ID,FormID,Name,Type")] FormField field)
         {
             if(ModelState.IsValid)
             {
@@ -100,7 +100,7 @@ namespace EZFormsPrototype.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Field field = db.Fields.Find(id);
+            FormField field = db.FormFields.Find(id);
             if (field == null)
             {
                 return HttpNotFound();
@@ -114,7 +114,7 @@ namespace EZFormsPrototype.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Field field = db.Fields.Find(id);
+            FormField field = db.FormFields.Find(id);
             db.Fields.Remove(field);
             db.SaveChanges();
             return RedirectToAction("Edit", "Form", new { id = field.FormID });
