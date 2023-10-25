@@ -9,7 +9,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Field</h4>
         <hr />
@@ -37,6 +37,64 @@
         </div>
 
         <div class="form-group">
+            <div class="@(Model.Type == "table" ? "col-md-offset-2 col-md-10" : "d-none")" id="TableFields">
+                <p>Each row in the table will have the following fields: </p>
+                @{ 
+
+                    int numColumns;
+                    if (ViewBag.TableFields != null)
+                    {
+                        numColumns = ViewBag.TableFields.Count;
+                    }
+                    else
+                    {
+                        numColumns = 0;
+                    }
+
+                }
+                <input type="hidden" id="numColumns" value="@numColumns" />
+                <table id="newRow">
+                    <tr>
+                        <th>Name: </th>
+                        <th>Type: </th>
+                        <th>Remove</th>
+                    </tr>
+                    @{  
+                        if (ViewBag.TableFields != null)
+                        {
+                            foreach (var tf in ViewBag.TableFields)
+                            {
+                            <tr id="inputRow">
+                                <td> 
+                                    <input type="text" name="TableFieldNames" value="@tf.Name"> 
+                                </td>
+                                <td>
+                                @{ 
+                                    string selectedAttr = "selcted=\"selected\"";
+
+                                }
+                                    <select class="form-control" name="TableFieldTypes">
+                                        <option @(tf.Type == "number" ?? Html.Raw(selectedAttr)) value="number">Number</option>
+                                        <option selected=@(tf.Type == "text" ?? Html.Raw(selectedAttr)) value="text">Text</option>
+                                        <option selected=@(tf.Type == "date" ?? Html.Raw(selectedAttr)) value="date">Date</option>
+                                        <option selected=@(tf.Type == "time" ?? Html.Raw(selectedAttr)) value="time">Time</option>
+                                        <option selected=@(tf.Type == "dateTime" ?? Html.Raw(selectedAttr)) value="dateTime">Date Time</option>
+                                        <option selected=@(tf.Type == "dollarAmount" ?? Html.Raw(selectedAttr)) value="dollarAmount">Dollar Amount</option>
+                                    </select>
+                                </td>
+                                <td>
+                                <button id="removeRow" type="button" class="btn btn-danger">Remove</button>
+                                </td>
+                            </tr>
+                            }
+                        }
+                    }
+                </table>
+                <button id="addRow" type="button" class="btn btn-info">Add column to table</button>
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
@@ -45,5 +103,58 @@
 }
 
 <div>
-    @Html.ActionLink("Back to form", "ParentForm", new { id = Model.FormID})
+    @Html.ActionLink("Back to form", "ParentForm", new { id = Model.FormID })
 </div>
+
+@section Scripts
+{
+    <script>
+        //TODO: find a better way to generate the dropdown here
+        function addTableField() {
+            var numColumns = parseInt($("#numColumns").val());
+            numColumns++;
+            $("#numColumns").val(numColumns);
+            var html = '';
+            html += '<tr id="inputRow">';
+            //don't add [i] to the name of the input, this way it will be sent to the controller as List<string> TableFieldTypes rather than many separate values
+            html += '<td> <input type="text" name="TableFieldNames" /> </td>';
+            html += '<td>';
+            html += '<select class="form-control" name="TableFieldTypes" >';
+            html += '<option selected="selected" value="number">Number</option>';
+            html += '<option value="text">Text</option>';
+            html += '<option value="date">Date</option>';
+            html += '<option value="time">Time</option>';
+            html += '<option value="dateTime">Date Time</option>';
+            html += '<option value="dollarAmount">Dollar Amount</option>';
+            html += '</select>';
+            html += '</td>';
+            html += '<td>'
+            html += '<button id="removeRow" type="button" class="btn btn-danger">Remove</button>';
+            html += '</td>'
+            html += '</tr>';
+            $('#newRow').append(html);
+        };
+        $("#Type").change(function () {
+            var type = $("#Type").val();
+            var numColumns = parseInt($("#numColumns").val());
+            if (type == "table") {
+                if (numColumns == 0) {
+                    addTableField();
+                }
+                $("#TableFields").attr('class', 'col-md-offset-2 col-md-10');
+            } else {
+                $("#TableFields").attr('class', 'd-none');
+            }
+        });
+
+        $("#addRow").click(function () {
+            addTableField();
+        });
+        $(document).on('click', '#removeRow', function () {
+            var rowCount = parseInt($("#total").val());
+            rowCount--;
+            $("#total").val(rowCount);
+            $(this).closest('#inputRow').remove();
+        });
+    </script>
+}

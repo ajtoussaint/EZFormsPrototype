@@ -41,8 +41,10 @@ namespace EZFormsPrototype.Controllers
             
             if(ModelState.IsValid)
             {
+                db.FormFields.Add(field);
+                db.SaveChanges();
                 //Check if the user is creating a table and make subfields if they are
-                if(field.Type == "table")
+                if (field.Type == "table")
                 {
                     for(int i = 0; i<field.TableFieldNames.Count; i++)
                     {
@@ -53,10 +55,10 @@ namespace EZFormsPrototype.Controllers
                         tf.FormID = field.FormID;
                         tf.FormOrder = i;
                         db.TableFields.Add(tf);
+                        db.SaveChanges();
                     }
                 }
-                db.FormFields.Add(field);
-                db.SaveChanges();
+                
                 return RedirectToAction("Edit", "Form", new { id = field.FormID });
             }
             return View();
@@ -73,24 +75,45 @@ namespace EZFormsPrototype.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Type = DropDownListUtility.GetFieldTypeDropdown("number");
-            //TODO: Explain why field is not passed as a variable to view?
+            ViewBag.Type = DropDownListUtility.GetFieldTypeDropdown(field.Type);
+            if(field.Type == "table")
+            {
+                ViewBag.TableFields = db.TableFields.Where(tf => tf.TableID == field.ID).ToList();
+            }
             return View(field);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,FormID,Name,Type")] FormField field)
+        public ActionResult Edit([Bind(Include = "ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes")] FormField field)
         {
             if(ModelState.IsValid)
             {
                 db.Entry(field).State = EntityState.Modified;
                 db.SaveChanges();
+                //Drop any TableFields associated with this FormField
+                List<TableField> tfList = db.TableFields.Where(tf => tf.TableID == field.ID).ToList();
+                db.TableFields.RemoveRange(tfList);
+                //Add new table fields as needed
+                if (field.Type == "table")
+                {
+                    for (int i = 0; i < field.TableFieldNames.Count; i++)
+                    {
+                        TableField tf = new TableField();
+                        tf.TableID = field.ID;
+                        tf.Name = field.TableFieldNames[i];
+                        tf.Type = field.TableFieldTypes[i];
+                        tf.FormID = field.FormID;
+                        tf.FormOrder = i;
+                        db.TableFields.Add(tf);
+                        db.SaveChanges();
+                    }
+                }
                 //send to the parent form edit page
                 return RedirectToAction("Edit", "Form", new { id = field.FormID });
             }
             //go back to edit when invalid model is posted
-            ViewBag.Type = DropDownListUtility.GetFieldTypeDropdown("number");
+            ViewBag.Type = DropDownListUtility.GetFieldTypeDropdown(field.Type);
             return View(field);
         }
 
@@ -115,6 +138,12 @@ namespace EZFormsPrototype.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             FormField field = db.FormFields.Find(id);
+            if (field.Type == "table")
+            {
+                //Drop any TableFields associated with this FormField
+                List<TableField> tfList = db.TableFields.Where(tf => tf.TableID == field.ID).ToList();
+                db.TableFields.RemoveRange(tfList);
+            }
             db.Fields.Remove(field);
             db.SaveChanges();
             return RedirectToAction("Edit", "Form", new { id = field.FormID });
