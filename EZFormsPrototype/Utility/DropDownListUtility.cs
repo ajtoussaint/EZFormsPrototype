@@ -22,5 +22,13 @@ namespace EZFormsPrototype.Utility
                 new SelectListItem { Text = "Table", Value = "table", Selected = ("table" == selectedValue)},
             };
         }
+        public static IEnumerable<SelectListItem> GetFlagLevelDropdown(string selectedValue)
+        {
+            return new List<SelectListItem>
+            {
+            new SelectListItem { Text = "Warning", Value = "warning", Selected = ("warning" == selectedValue)},
+            new SelectListItem { Text = "Danger", Value = "danger", Selected = ("danger" == selectedValue) },
+            };
+        }
     }
 }

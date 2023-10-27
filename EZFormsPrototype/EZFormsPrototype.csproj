@@ -128,6 +128,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\FieldController.cs" />
+    <Compile Include="Controllers\FlagController.cs" />
     <Compile Include="Controllers\FormController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DAL\FormContext.cs" />
@@ -155,8 +156,17 @@
     <Compile Include="Migrations\202310271608471_regexNames.designer.cs">
       <DependentUpon>202310271608471_regexNames.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202310271634217_flagClass.cs" />
+    <Compile Include="Migrations\202310271634217_flagClass.designer.cs">
+      <DependentUpon>202310271634217_flagClass.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310271645076_flagLevelNameChange.cs" />
+    <Compile Include="Migrations\202310271645076_flagLevelNameChange.designer.cs">
+      <DependentUpon>202310271645076_flagLevelNameChange.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Field.cs" />
+    <Compile Include="Models\Flag.cs" />
     <Compile Include="Models\Form.cs" />
     <Compile Include="Models\FormField.cs" />
     <Compile Include="Models\TableField.cs" />
@@ -222,6 +232,8 @@
     <Content Include="Views\Home\Laboratory.cshtml" />
     <Content Include="Views\Field\Edit.cshtml" />
     <Content Include="Views\Field\Delete.cshtml" />
+    <Content Include="Views\Flag\Index.cshtml" />
+    <Content Include="Views\Flag\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -269,6 +281,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202310271608471_regexNames.resx">
       <DependentUpon>202310271608471_regexNames.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310271634217_flagClass.resx">
+      <DependentUpon>202310271634217_flagClass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310271645076_flagLevelNameChange.resx">
+      <DependentUpon>202310271645076_flagLevelNameChange.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -20,5 +20,7 @@ namespace EZFormsPrototype.DAL
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
+
+        public System.Data.Entity.DbSet<EZFormsPrototype.Models.Flag> Flags { get; set; }
     }
 }
