@@ -107,6 +107,7 @@ namespace EZFormsPrototype.Controllers
                 //Add new table fields as needed
                 if (field.Type == "table")
                 {
+                    //TODO: Prevent this from breaking when a flag is made for the table
                     for (int i = 0; i < field.TableFieldNames.Count; i++)
                     {
                         TableField tf = new TableField();

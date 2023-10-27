@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using EZFormsPrototype.Models;
 using EZFormsPrototype.Utility;
+using System.Data.Entity;
 
 namespace EZFormsPrototype.Controllers
 {
@@ -53,6 +54,31 @@ namespace EZFormsPrototype.Controllers
             ViewBag.ParentName = parentField.Name;
             return View();*/
             return RedirectToAction("Create", new { id = flag.FieldID });
+        }
+
+        public ActionResult Edit(int id)
+        {
+            Flag flag = db.Flags.Find(id);
+            if(flag == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.Level = DropDownListUtility.GetFlagLevelDropdown(flag.Level);
+            return View(flag);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "ID,Name,Message,TriggerExpression,Level,FieldID,FormID")] Flag flag)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(flag).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Edit", "Field", new { id = flag.FieldID });
+            }
+            ViewBag.Level = DropDownListUtility.GetFlagLevelDropdown(flag.Level);
+            return View(flag);
         }
 
         public ActionResult Delete(int id)
