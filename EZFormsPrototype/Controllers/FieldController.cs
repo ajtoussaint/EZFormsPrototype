@@ -61,6 +61,14 @@ namespace EZFormsPrototype.Controllers
                 
                 return RedirectToAction("Edit", "Form", new { id = field.FormID });
             }
+            ViewBag.parentID = field.FormID;
+            Form parentForm = db.Forms.Find(field.FormID);
+            if (parentForm == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.ParentTitle = parentForm.Title;
+            ViewBag.Type = DropDownListUtility.GetFieldTypeDropdown("number");
             return View();
         }
 

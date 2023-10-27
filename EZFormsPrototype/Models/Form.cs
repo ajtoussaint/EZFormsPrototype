@@ -8,6 +8,7 @@ namespace EZFormsPrototype.Models
     {
         [Key]
         public int ID { get; set; }
+        [RegularExpression("[a-zA-Z0-9-]+")]
         public string Title { get; set; }
         public string Description { get; set; }
 

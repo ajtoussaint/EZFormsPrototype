@@ -147,6 +147,14 @@
     <Compile Include="Migrations\202310251855423_minorTableFormUpdate.designer.cs">
       <DependentUpon>202310251855423_minorTableFormUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202310252110114_UniqueLocalNames.cs" />
+    <Compile Include="Migrations\202310252110114_UniqueLocalNames.designer.cs">
+      <DependentUpon>202310252110114_UniqueLocalNames.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310271608471_regexNames.cs" />
+    <Compile Include="Migrations\202310271608471_regexNames.designer.cs">
+      <DependentUpon>202310271608471_regexNames.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Field.cs" />
     <Compile Include="Models\Form.cs" />
@@ -255,6 +263,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202310251855423_minorTableFormUpdate.resx">
       <DependentUpon>202310251855423_minorTableFormUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310252110114_UniqueLocalNames.resx">
+      <DependentUpon>202310252110114_UniqueLocalNames.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310271608471_regexNames.resx">
+      <DependentUpon>202310271608471_regexNames.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

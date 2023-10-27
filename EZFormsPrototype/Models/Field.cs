@@ -7,6 +7,8 @@ namespace EZFormsPrototype.Models
     public class Field { 
         [Key]
         public int ID { get; set; }
+        [MaxLength(99)]
+        [RegularExpression("[a-zA-Z0-9-]+")]
         public string Name { get; set; }
         public int FormID { get; set; }
         [Range(0, int.MaxValue)]
