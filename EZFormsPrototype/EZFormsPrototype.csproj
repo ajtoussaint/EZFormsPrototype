@@ -234,6 +234,7 @@
     <Content Include="Views\Field\Delete.cshtml" />
     <Content Include="Views\Flag\Index.cshtml" />
     <Content Include="Views\Flag\Create.cshtml" />
+    <Content Include="Views\Flag\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

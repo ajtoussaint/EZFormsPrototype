@@ -49,6 +49,7 @@ namespace EZFormsPrototype.Controllers
                 {
                     for(int i = 0; i<field.TableFieldNames.Count; i++)
                     {
+                        //TODO: subfields get messed up by validation
                         TableField tf = new TableField();
                         tf.TableID = field.ID;
                         tf.Name = field.TableFieldNames[i];
@@ -156,6 +157,11 @@ namespace EZFormsPrototype.Controllers
             db.Fields.Remove(field);
             db.SaveChanges();
             return RedirectToAction("Edit", "Form", new { id = field.FormID });
+        }
+
+        public ActionResult CreateFlag(int id)
+        {
+            return RedirectToAction("Create", "Flag", new { id = id });
         }
 
         public ActionResult ParentForm(int id)

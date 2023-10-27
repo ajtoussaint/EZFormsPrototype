@@ -55,6 +55,26 @@ namespace EZFormsPrototype.Controllers
             return RedirectToAction("Create", new { id = flag.FieldID });
         }
 
+        public ActionResult Delete(int id)
+        {
+            Flag flag = db.Flags.Find(id);
+            if(flag == null)
+            {
+                return HttpNotFound();
+            }
+            return View(flag);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Flag flag = db.Flags.Find(id);
+            db.Flags.Remove(flag);
+            db.SaveChanges();
+            return RedirectToAction("Edit", "Field", new { id = flag.FieldID });
+        }
+
         public ActionResult ParentField(int id)
         {
             return RedirectToAction("Edit", "Field", new {id = id});
