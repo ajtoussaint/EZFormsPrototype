@@ -1,0 +1,16 @@
+﻿@using EZFormsPrototype.ViewModels;
+
+@model EZFormsPrototype.ViewModels.FinalResult
+@{
+    ViewBag.Title = "FinalResult";
+}
+
+<h2>FinalResult:</h2>
+
+<h1>@Model.FormTitle</h1>
+<p>@Model.FormDescription</p>
+@foreach (Result result in Model.Results)
+{
+    <h3>@Html.DisplayFor(ModelItem => result.Title)</h3>
+    <p>@Html.DisplayFor(ModelItem => result.Value)</p>
+}

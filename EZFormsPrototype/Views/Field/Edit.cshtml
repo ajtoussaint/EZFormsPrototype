@@ -95,7 +95,16 @@
         </div>
 
         <div>
-            @Html.ActionLink("Add new Flag", "CreateFlag", new { id = Model.ID})
+            <h4>Flags:</h4>
+            @foreach (var flag in ViewBag.Flags)
+            {
+                <div>@flag.Name</div>
+                <div>
+                    @Html.ActionLink("Edit", "EditFlag", new { id = flag.ID }) |
+                    @Html.ActionLink("Delete", "DeleteFlag", new { id = flag.ID })
+                </div>
+            }
+            @Html.ActionLink("Add new Flag", "CreateFlag", new { id = Model.ID })
         </div>
 
         <div class="form-group">

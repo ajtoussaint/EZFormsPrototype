@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using EZFormsPrototype.DAL;
 using EZFormsPrototype.Models;
+using EZFormsPrototype.ViewModels;
 
 namespace EZFormsPrototype.Controllers
 {
@@ -115,6 +116,28 @@ namespace EZFormsPrototype.Controllers
             db.Forms.Remove(form);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Fillable(int id)
+        {
+            FillableForm ViewModel = new FillableForm();
+            ViewModel.Form = db.Forms.Find(id);
+            ViewModel.Fields = db.FormFields.Where(f => f.FormID == ViewModel.Form.ID).ToList();
+            ViewModel.TableFields = db.TableFields.Where(f => f.FormID == ViewModel.Form.ID).ToList();
+            ViewModel.Flags = db.Flags.Where(f => f.FormID == ViewModel.Form.ID).ToList();
+            return View(ViewModel);
+        }
+
+        public ActionResult FinalResult(FormCollection form)
+        {
+            FinalResult res = new FinalResult();
+            foreach(string key in form.AllKeys)
+            {
+                res.addResult(key, form[key]);
+            }
+            res.FormTitle = form["Form.Title"];
+            res.FormDescription = form["Form.Description"];
+            return View(res);
         }
 
         public ActionResult CreateField(int id)

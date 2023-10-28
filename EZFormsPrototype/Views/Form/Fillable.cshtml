@@ -1,0 +1,32 @@
+﻿
+@using EZFormsPrototype.Models; 
+
+@model EZFormsPrototype.ViewModels.FillableForm
+
+@{
+    ViewBag.Title = "Fillable";
+}
+
+<h2>@Model.Form.Title</h2>
+<p>@Model.Form.Description</p>
+
+<form action="/Form/FinalResult" method="post">
+    @Html.HiddenFor(ModelItem => Model.Form.Title)
+    @Html.HiddenFor(ModelItem => Model.Form.Description)
+    @foreach (Field field in Model.Fields)
+    {
+        <h3>@Html.DisplayFor(ModelItem => field.Name)</h3>
+        <input type=@(field.Type) name=@(field.Name + "#" + field.ID) />
+
+    }
+    <div>
+        <input type="submit" value="Submit" class="btn btn-default" />
+    </div>
+
+</form>
+<div>
+    @Html.ActionLink("Back", "Index")
+</div>
+
+
+

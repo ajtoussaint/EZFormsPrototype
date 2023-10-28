@@ -90,6 +90,7 @@ namespace EZFormsPrototype.Controllers
             {
                 ViewBag.TableFields = db.TableFields.Where(tf => tf.TableID == field.ID).ToList();
             }
+            ViewBag.Flags = db.Flags.Where(f => f.FieldID == field.ID).ToList();
             return View(field);
         }
 
@@ -163,6 +164,16 @@ namespace EZFormsPrototype.Controllers
         public ActionResult CreateFlag(int id)
         {
             return RedirectToAction("Create", "Flag", new { id = id });
+        }
+
+        public ActionResult EditFlag(int id)
+        {
+            return RedirectToAction("Edit", "Flag", new { id = id });
+        }
+
+        public ActionResult DeleteFlag(int id)
+        {
+            return RedirectToAction("Delete", "Flag", new { id = id });
         }
 
         public ActionResult ParentForm(int id)
