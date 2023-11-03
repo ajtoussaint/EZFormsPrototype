@@ -1,4 +1,5 @@
-﻿@model EZFormsPrototype.Models.Flag
+﻿@using EZFormsPrototype.Utility
+@model EZFormsPrototype.Models.Flag
 
 @{
     ViewBag.Title = "Edit";
@@ -33,14 +34,6 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.TriggerExpression, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.TriggerExpression, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.TriggerExpression, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
         @Html.LabelFor(model => model.Level, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.DropDownList("Level", null, htmlAttributes: new { @class = "form-control" })
@@ -49,7 +42,61 @@
     </div>
 
     <div class="form-group">
-        @Html.HiddenFor(model => model.FieldID, new {Value = Model.FieldID})
+        Expression Builder:
+        <table id="buildButtons" class="border">
+            <tr>
+                <th class="text-wrap">Select a Field to Evaluate</th>
+                <th class="text-wrap">Select a Comparison</th>
+                <th class="text-wrap">Select a field or Value to compare to</th>
+            </tr>
+            <tr>
+                <td>
+                    <select class="form-control-sm" id="blockField">
+                        @foreach (var field in ViewBag.Fields)
+                        {
+                            //TODO: Select the field associated with this flag by default
+                            <option value=@("Field" + field.ID)>@(field.Name)</option>
+                        }
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control-sm" id="blockComparison">
+                        <option value=">">></option>
+                        <option value="<"><</option>
+                        <option value=">=">>=</option>
+                        <option value="<="><=</option>
+                        <option value="==">=</option>
+                        <option value="!=">does not equal</option>
+                    </select>
+                </td>
+                <td>
+                    @{/*TODO: use JQuery to change from dropdown vs. other types of inputs based on comparison and a toggle*/ }
+                    <select class="form-control-sm" id="blockField2">
+                        @foreach (var field in ViewBag.Fields)
+                        {
+                            <option value=@("Field" + field.ID)>@(field.Name)</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="button" id="addBlock" class="btn btn-info">Add block</button>
+                </td>
+            </tr>
+        </table>
+        <div>
+            The flag will appear to the user when the expression below is TRUE
+            <div id="expressionSpace">
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        @Html.HiddenFor(model => model.FieldID, new { Value = Model.FieldID })
     </div>
 
     <div class="form-group">
@@ -67,3 +114,25 @@
 <div>
     @Html.ActionLink("Back to field", "ParentField", new { id = Model.FieldID })
 </div>
+
+@section Scripts{
+    <script>
+        $("#addBlock").click(function () {
+            alert("adding");
+            //TODO: Finish this function
+            //add html that represents the block to the expressionSpace with a remove button
+            //The block has a hidden input with the expression value
+            var blockField = $("#blockField").text();
+            alert(blockField);
+            var blockComparison = $("#blockComparison").text();
+            alert(blockComparison);
+            var blockField2 = $("#blockField2").text();
+            alert(blockField2);
+            var html = '';
+            html += '<div>'
+            html += blockField + " " + blockComparison + " " + blockField2;
+            html += '</div>'
+            alert(html);
+        })
+    </script>
+}

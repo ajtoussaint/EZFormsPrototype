@@ -30,5 +30,18 @@ namespace EZFormsPrototype.Utility
             new SelectListItem { Text = "Danger", Value = "danger", Selected = ("danger" == selectedValue) },
             };
         }
+
+        public static IEnumerable<SelectListItem> GetComparisonDropdown(string selectedValue)
+        {
+            return new List<SelectListItem>
+            {
+                new SelectListItem { Text = ">", Value = ">", Selected = (">" == selectedValue)},
+                new SelectListItem { Text = "<", Value = "<", Selected = ("<" == selectedValue)},
+                new SelectListItem { Text = ">=", Value = ">=", Selected = (">=" == selectedValue)},
+                new SelectListItem { Text = "<=", Value = "<=", Selected = ("<=" == selectedValue)},
+                new SelectListItem { Text = "=", Value = "==", Selected = ("==" == selectedValue)},
+                new SelectListItem { Text = "does not equal", Value = "!=", Selected = ("!=" == selectedValue)},
+            };
+        }
     }
 }

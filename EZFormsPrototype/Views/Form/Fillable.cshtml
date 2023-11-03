@@ -15,9 +15,20 @@
     @Html.HiddenFor(ModelItem => Model.Form.Description)
     @foreach (Field field in Model.Fields)
     {
-        <h3>@Html.DisplayFor(ModelItem => field.Name)</h3>
-        <input type=@(field.Type) name=@(field.Name + "#" + field.ID) />
-
+        <div>
+            <h3>@Html.DisplayFor(ModelItem => field.Name)</h3>
+            <input type=@(field.Type) name=@(field.Name) id=@("Field" + field.ID) />
+            @foreach(Flag flag in Model.Flags)
+            {
+                if(flag.FieldID == field.ID)
+                {
+                    <div id=@("Flag" + flag.ID) class="d-none">
+                        <h4>@flag.Name</h4>
+                        <p>@flag.Message</p>
+                    </div>
+                }
+            }
+        </div>
     }
     <div>
         <input type="submit" value="Submit" class="btn btn-default" />
@@ -28,5 +39,43 @@
     @Html.ActionLink("Back", "Index")
 </div>
 
+@section Scripts
+{
+    <script>
+        @foreach(Field field in Model.Fields)
+        {
+            <text>
+            //runs every time the field is updated
+            $("@("#Field"+ field.ID)").change(function () {
+                alert(@("a change has been made to field: " + field.Name));
+                //run the flag function for each flag that has a depdnecy on this field
+                /*pseudo code
+                "at" foreach(Flag flag in Model.Flags){
+                    if(field.ID in flag.dependantFields){
+                        <text>
+                            updateFlag"ID"();
+                        </text>
+                    }
+                }
+
+                */
+            })
+            </text>
+        }
+        @foreach(Flag flag in Model.Flags)
+        {
+            <text>
+                function updateFlag@(flag.ID)() {
+                    alert(@("updating flag: " + flag.Name)));
+                    //get the current value for each field referenced in the flag
+                    //evaluate the flag expression
+                    //if the expression evaluates to TRUE remove d-none class
+                    //else add the dnone class to the div
+                }
+            </text>
+        }
+
+    </script>
+}
 
 

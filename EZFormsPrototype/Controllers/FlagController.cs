@@ -44,15 +44,6 @@ namespace EZFormsPrototype.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Edit", "Field", new { id = flag.FieldID });
             }
-            /*Field parentField = db.Fields.Find(flag.FieldID);
-            if (parentField == null)
-            {
-                return HttpNotFound();
-            }
-
-            ViewBag.ParentFieldID = parentField.ID;
-            ViewBag.ParentName = parentField.Name;
-            return View();*/
             return RedirectToAction("Create", new { id = flag.FieldID });
         }
 
@@ -64,6 +55,7 @@ namespace EZFormsPrototype.Controllers
                 return HttpNotFound();
             }
             ViewBag.Level = DropDownListUtility.GetFlagLevelDropdown(flag.Level);
+            ViewBag.Fields = db.Fields.Where(f => f.FormID == flag.FormID).ToList();
             return View(flag);
         }
 
