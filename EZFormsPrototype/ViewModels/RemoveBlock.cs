@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.ComponentModel.DataAnnotations;
 
-namespace EZFormsPrototype.Models
+namespace EZFormsPrototype.ViewModels
 {
-    public class Flag
+    public class RemoveBlock
     {
-        [Key]
         public int ID { get; set; }
-        [MaxLength(99)]
-        [RegularExpression("[a-zA-Z0-9-]+")]
         public string Name { get; set; }
         public string Message { get; set; }
         public string TriggerExpression { get; set; }
@@ -19,5 +15,6 @@ namespace EZFormsPrototype.Models
         public int FieldID { get; set; }
         public int FormID { get; set; }
 
+        public int BlockToRemove {  get; set; }
     }
 }

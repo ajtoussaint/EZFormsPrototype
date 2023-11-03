@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using System.ComponentModel.DataAnnotations;
 
-namespace EZFormsPrototype.Models
+namespace EZFormsPrototype.ViewModels
 {
-    public class Flag
+    public class AddBlock
     {
-        [Key]
         public int ID { get; set; }
-        [MaxLength(99)]
-        [RegularExpression("[a-zA-Z0-9-]+")]
         public string Name { get; set; }
         public string Message { get; set; }
         public string TriggerExpression { get; set; }
         public string Level { get; set; }
         public int FieldID { get; set; }
         public int FormID { get; set; }
-
+        public int Order { get; set; }
+        public int DependantFieldID1 { get; set; }
+        public int DependantFieldID2 { get; set; }
+        public string CodeExpression { get; set; }
+        public string ViewExpression { get; set; }
     }
 }

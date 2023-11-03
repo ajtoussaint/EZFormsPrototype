@@ -55,7 +55,7 @@
                         @foreach (var field in ViewBag.Fields)
                         {
                             //TODO: Select the field associated with this flag by default
-                            <option type=@(field.Type) value=@("#Field" + field.ID)>@(field.Name)</option>
+                            <option type=@(field.Type) value=@("#" + field.ID)>@(field.Name)</option>
                         }
                     </select>
                 </td>
@@ -74,23 +74,42 @@
                         @foreach (var field in ViewBag.Fields)
                         {
                             //TODO: come up with a way to identify the field ID within the string that cant be replicated in text input
-                            <option value=@("#Field" + field.ID)>@(field.Name)</option>
+                            <option value=@("#" + field.ID)>@(field.Name)</option>
                         }
                         <option value="#custom#">Custom</option>
                     </select>
                     <input type="hidden" id="customInput" />
+                    <div id="invalidCustomInput" class="d-none alert-danger" >Input cannot contain specail characters: ' " / < > #</div>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <button type="button" id="addBlock" class="btn btn-info">Add block</button>
+                    <button type="submit" id="postBlock" class="btn btn-info">Add block</button>
                 </td>
             </tr>
         </table>
+        <div id="conjunctionButtons" class="border">
+            <div>
+                Conjunctions:
+            </div>
+            <div>
+                <button type="submit" id="orConjunction" value="||" class="btn btn-info">Or</button>
+                <button type="submit" id="andConjunction" value="&&" class="btn btn-info">And</button>
+                <button type="submit" id="opConjunction" value="(" class="btn btn-info">(</button>
+                <button type="submit" id="cpConjunction" value=")" class="btn btn-info">)</button>
+            </div>
+        </div>
         <div>
             The flag will appear to the user when the expression below is TRUE
             <div id="expressionSpace">
-
+                <input type="hidden" name="Order" value="1" />
+                @foreach(var block in ViewBag.ExpressionBlocks)
+                {
+                    <div class=expressionBlock>
+                        <div>@(block.ViewExpression)</div>
+                        <button id="removeBlock" type="submit" class="btn btn-danger" value="@(block.ID)">X</button>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -119,9 +138,10 @@
 
 @section Scripts{
     <script>
-        $("#addBlock").click(function () {
-            //alert("adding");
-            //add html that represents the block to the expressionSpace with a remove button
+        $("#postBlock").click(function () {
+            //TODO: Sanitize user input for text
+
+            //add html that represents the block to the expressionSpace so it will be posted to the action result for processing
             //The block has a hidden input with the expression value
             var blockField = $("#blockField").val();
             var blockFieldName = $("#blockField").find(":selected").text();
@@ -132,6 +152,11 @@
             var custom = $("#blockField2").find(":selected").val() == "#custom#";
             if (custom) {
                 blockField2 = $("#customInput").val();
+                if (/['"#<>\/]/.test(blockField2)) {
+                    $("#invalidCustomInput").attr('class', '.text-danger');
+                    //prevents posting
+                    return false;
+                }
                 blockFieldName2 = blockField2;
             } else {
                 blockField2 = $("#blockField2").val();
@@ -139,20 +164,41 @@
             }
             var html = '';
             html += '<div class=expressionBlock>'
-            html += '<input type="hidden" name="FlagConditions" value ="' + blockField + " " + blockComparison + " " + blockField2 + ' " />';
-            html += '<input type="hidden" name = "DependantFields" value="' + blockField.match(/\d+/)[0] + '" />'
+            html += '<input type="hidden" name="CodeExpression" value ="' + blockField + " " + blockComparison + " " + blockField2 + ' " />';
+            html += '<input type="hidden" name="ViewExpression" value ="' + blockFieldName + " " + blockComparisonName + " " + blockFieldName2 + ' " />';
+            html += '<input type="hidden" name = "DependantFieldID1" value="' + blockField.match(/\d+/)[0] + '" />'
             if (!custom) {
-                html += '<input type="hidden" name = "DependantFields" value="' + blockField2.match(/\d+/)[0] + '" />'
+                html += '<input type="hidden" name = "DependantFieldID2" value="' + blockField2.match(/\d+/)[0] + '" />'
             }
-            html += '<div>' + blockFieldName + " " + blockComparisonName + " " + blockFieldName2 + " " + '</div>'
-            html += '<button id="removeBlock" type="button" class="btn btn-danger">X</button>'
             html += '</div>'
             $("#expressionSpace").append(html);
+            var action = $("form").attr("action");
+            action = action.replace(/Flag\/[\w]+\//, "Flag/AddBlock/");
+            $("form").attr("action", action);
         })
 
         $(document).on('click', '#removeBlock', function () {
-            $(this).closest(".expressionBlock").remove();
+            var id = $(this).val();
+            var html = '';
+            html += '<input type="hidden" name="BlockToRemove" value="' + id + '" />'
+            $("#expressionSpace").append(html);
+            var action = $("form").attr("action");
+            action = action.replace(/Flag\/[\w]+\//, "Flag/RemoveBlock/");
+            $("form").attr("action", action);
         });
+
+        $("#orConjunction").click(function () {
+            addConjunction(this);
+        })
+        $("#andConjunction").click(function () {
+            addConjunction(this);
+        })
+        $("#opConjunction").click(function () {
+            addConjunction(this);
+        })
+        $("#cpConjunction").click(function () {
+            addConjunction(this);
+        })
 
         $(document).ready(function () {
             toggleCustomInput();
@@ -171,5 +217,20 @@
                 $("#customInput").prop('type', 'hidden');
             }
         }
+
+        function addConjunction(element) {
+            var code = $(element).val();
+            var view = $(element).text();
+            var html = '';
+            html += '<div class=expressionBlock>'
+            html += '<input type="hidden" name="CodeExpression" value="' + code + ' " />';
+            html += '<input type="hidden" name="ViewExpression" value="' + view + ' " />';
+            html += '</div>'
+            $("#expressionSpace").append(html);
+            var action = $("form").attr("action");
+            action = action.replace(/Flag\/[\w]+\//, "Flag/AddBlock/");
+            $("form").attr("action", action);
+        }
+
     </script>
 }
