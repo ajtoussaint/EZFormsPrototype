@@ -18,6 +18,7 @@ namespace EZFormsPrototype.Models
         public string Level { get; set; }
         public int FieldID { get; set; }
         public int FormID { get; set; }
-
+        public List<int> DependantFields { get; set; }
+        public List<string> FlagConditions { get; set; }
     }
 }

@@ -61,10 +61,16 @@ namespace EZFormsPrototype.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Message,TriggerExpression,Level,FieldID,FormID")] Flag flag)
+        public ActionResult Edit([Bind(Include = "ID,Name,Message,TriggerExpression,Level,FieldID,FormID,DependantFields,FlagConditions")] Flag flag)
         {
             if (ModelState.IsValid)
             {
+                string expression = "";
+                foreach(string exp in flag.FlagConditions)
+                {
+                    expression += exp;
+                }
+                flag.TriggerExpression = expression;
                 db.Entry(flag).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Edit", "Field", new { id = flag.FieldID });
