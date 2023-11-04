@@ -124,7 +124,12 @@ namespace EZFormsPrototype.Controllers
             ViewModel.Form = db.Forms.Find(id);
             ViewModel.Fields = db.FormFields.Where(f => f.FormID == ViewModel.Form.ID).ToList();
             ViewModel.TableFields = db.TableFields.Where(f => f.FormID == ViewModel.Form.ID).ToList();
-            ViewModel.Flags = db.Flags.Where(f => f.FormID == ViewModel.Form.ID).ToList();
+            List<Flag> flags = db.Flags.Where(f => f.FormID == ViewModel.Form.ID).ToList();
+            foreach(Flag flag in flags)
+            {
+                flag.ExpressionBlocks = db.ExpressionBlocks.Where(e => e.FlagID == flag.ID).OrderBy(e => e.Order).ToList();
+            }
+            ViewModel.Flags = flags;
             return View(ViewModel);
         }
 

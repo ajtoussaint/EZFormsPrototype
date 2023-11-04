@@ -20,6 +20,7 @@
             <input type=@(field.Type) name=@(field.Name) id=@("Field" + field.ID) />
             @foreach(Flag flag in Model.Flags)
             {
+                //TODO: might be better to bundle these on the controller similar to how the Expression Blocks work
                 if(flag.FieldID == field.ID)
                 {
                     <div id=@("Flag" + flag.ID) class="d-none">
@@ -47,18 +48,27 @@
             <text>
             //runs every time the field is updated
             $("@("#Field"+ field.ID)").change(function () {
-                alert(@("a change has been made to field: " + field.Name));
+                alert("@("a change has been made to field: " + field.Name)");
                 //run the flag function for each flag that has a depdnecy on this field
-                /*pseudo code
-                "at" foreach(Flag flag in Model.Flags){
-                    if(field.ID in flag.dependantFields){
-                        <text>
-                            updateFlag"ID"();
-                        </text>
-                    }
+               @{ 
+                   HashSet<int> flagIDs = new HashSet<int>();
+                   foreach(Flag flag in Model.Flags)
+                   {
+                       foreach(ExpressionBlock block in flag.ExpressionBlocks)
+                        {
+                           if(block.DependantFieldID1 == field.ID || block.DependantFieldID2 == field.ID)
+                            {
+                               flagIDs.Add(flag.ID);
+                            }
+                        }
+                   }
+               }
+                @foreach(int flagID in flagIDs)
+                {
+                   <text>
+                    @("updateFlag" + flagID + "();")
+                   </text>
                 }
-
-                */
             })
             </text>
         }
@@ -66,10 +76,34 @@
         {
             <text>
                 function updateFlag@(flag.ID)() {
-                    alert(@("updating flag: " + flag.Name)));
+                    alert("@("updating flag: " + flag.Name)");
                     //get the current value for each field referenced in the flag
+                    @{string expression = "";}
+                    @foreach (ExpressionBlock block in flag.ExpressionBlocks)
+                    {
+                        if(block.DependantFieldID1 != 0) {
+                            <text>
+                            var @("DField1of" + block.ID.ToString()) = $("@("#Field" + block.DependantFieldID1)").val();
+                            </text>
+                        }
+                        if(block.DependantFieldID2 != 0)
+                        {
+                            <text>
+                            var @("DField2of" + block.ID.ToString()) = $("@("#Field" + block.DependantFieldID2)").val();
+                            </text>
+                        }
+                        //TODO: might be able to preformat this replace string depening on how I code the above
+                        expression += block.CodeExpression.Replace("#" + block.DependantFieldID1, "DField1of" + block.ID.ToString()).Replace("#" + block.DependantFieldID2, "DField2of" + block.ID.ToString());
+                    }
                     //evaluate the flag expression
+                    //TODO: expressions are puttin &gt; in the jquery instead of >
+                    //var result = @(expression);
                     //if the expression evaluates to TRUE remove d-none class
+                    if(true){
+                        $("@("#Flag" + flag.ID)").attr("class", "");
+                    } else {
+                        $("@("#Flag" + flag.ID)").attr("class", "d-none");
+                    }
                     //else add the dnone class to the div
                 }
             </text>

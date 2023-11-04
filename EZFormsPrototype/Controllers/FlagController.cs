@@ -97,14 +97,19 @@ namespace EZFormsPrototype.Controllers
             block.ViewExpression = data.ViewExpression;
             block.FlagID = data.ID;
 
-            List<ExpressionBlock> blocks = db.ExpressionBlocks.OrderBy(x => x.Order).ToList();
-            foreach(ExpressionBlock b in blocks)
+            ExpressionBlock collision = db.ExpressionBlocks.Where(e => e.Order == block.Order).FirstOrDefault();
+
+            if(collision != null)
             {
-                if(b.Order >= block.Order)
+                List<ExpressionBlock> blocks = db.ExpressionBlocks.OrderBy(x => x.Order).ToList();
+                foreach (ExpressionBlock b in blocks)
                 {
-                    b.Order++;
+                    if (b.Order >= block.Order)
+                    {
+                        b.Order++;
+                    }
+                    db.Entry(b).State = EntityState.Modified;
                 }
-                db.Entry(b).State = EntityState.Modified;
             }
 
             db.ExpressionBlocks.Add(block);

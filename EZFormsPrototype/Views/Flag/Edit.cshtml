@@ -102,13 +102,14 @@
         <div>
             The flag will appear to the user when the expression below is TRUE
             <div id="expressionSpace">
-                <input type="hidden" name="Order" value="1" />
+                <input id="newBlockOrder" type="radio" name="Order" value="@(ViewBag.ExpressionBlocks != null ? ViewBag.ExpressionBlocks[0].Order - 1 : 50)" />
                 @foreach(var block in ViewBag.ExpressionBlocks)
                 {
                     <div class=expressionBlock>
                         <div>@(block.ViewExpression)</div>
                         <button id="removeBlock" type="submit" class="btn btn-danger" value="@(block.ID)">X</button>
                     </div>
+                    <input id="newBlockOrder" type="radio" name="Order" value="@(block.Order + 1)" />
                 }
             </div>
         </div>

@@ -19,5 +19,7 @@ namespace EZFormsPrototype.Models
         public int FieldID { get; set; }
         public int FormID { get; set; }
 
+        public List<ExpressionBlock> ExpressionBlocks { get; set; }
+
     }
 }
