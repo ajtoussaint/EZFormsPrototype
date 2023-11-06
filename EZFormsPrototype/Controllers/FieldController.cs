@@ -152,9 +152,11 @@ namespace EZFormsPrototype.Controllers
             FormField field = db.FormFields.Find(id);
             if (field.Type == "table")
             {
-                //Drop any TableFields associated with this FormField
+                //Drop any TableFields and Flags associated with this FormField
                 List<TableField> tfList = db.TableFields.Where(tf => tf.TableID == field.ID).ToList();
+                List<Flag> fList = db.Flags.Where(f => f.FieldID == field.ID).ToList();
                 db.TableFields.RemoveRange(tfList);
+                db.Flags.RemoveRange(fList);
             }
             db.Fields.Remove(field);
             db.SaveChanges();

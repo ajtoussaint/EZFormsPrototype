@@ -193,6 +193,7 @@
     <Compile Include="Models\TableField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\DropDownListUtility.cs" />
+    <Compile Include="Utility\FlagExpression.cs" />
     <Compile Include="ViewModels\AddBlock.cs" />
     <Compile Include="ViewModels\FieldWithFlags.cs" />
     <Compile Include="ViewModels\FillableForm.cs" />

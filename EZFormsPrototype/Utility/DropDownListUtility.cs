@@ -41,6 +41,7 @@ namespace EZFormsPrototype.Utility
                 new SelectListItem { Text = "<=", Value = "<=", Selected = ("<=" == selectedValue)},
                 new SelectListItem { Text = "=", Value = "==", Selected = ("==" == selectedValue)},
                 new SelectListItem { Text = "does not equal", Value = "!=", Selected = ("!=" == selectedValue)},
+                new SelectListItem { Text = "is empty", Value = "_isEmpty_", Selected = ("_isEmpty" == selectedValue)}
             };
         }
     }

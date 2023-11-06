@@ -67,19 +67,19 @@
                         <option value="<="><=</option>
                         <option value="==">=</option>
                         <option value="!=">does not equal</option>
+                        <option value="_isEmpty_">is empty</option>
                     </select>
                 </td>
                 <td>
                     <select class="form-control-sm" id="blockField2">
                         @foreach (var field in ViewBag.Fields)
                         {
-                            //TODO: come up with a way to identify the field ID within the string that cant be replicated in text input
                             <option value=@("#" + field.ID)>@(field.Name)</option>
                         }
                         <option value="#custom#">Custom</option>
                     </select>
                     <input type="hidden" id="customInput" />
-                    <div id="invalidCustomInput" class="d-none alert-danger" >Input cannot contain specail characters: ' " / < > #</div>
+                    <div id="invalidCustomInput" class="d-none alert-danger" >Input cannot contain specail characters: ' " / < > # $ _</div>
                 </td>
             </tr>
             <tr>
@@ -102,7 +102,7 @@
         <div>
             The flag will appear to the user when the expression below is TRUE
             <div id="expressionSpace">
-                <input id="newBlockOrder" type="radio" name="Order" value="@(ViewBag.ExpressionBlocks != null ? ViewBag.ExpressionBlocks[0].Order - 1 : 50)" />
+                <input checked="checked" id="newBlockOrder" type="radio" name="Order" value="@(ViewBag.ExpressionBlocks.Count != 0 ? ViewBag.ExpressionBlocks[0].Order - 1 : 50)" />
                 @foreach(var block in ViewBag.ExpressionBlocks)
                 {
                     <div class=expressionBlock>
@@ -151,24 +151,29 @@
             var blockField2
             var blockFieldName2
             var custom = $("#blockField2").find(":selected").val() == "#custom#";
-            if (custom) {
-                blockField2 = $("#customInput").val();
-                if (/['"#<>\/]/.test(blockField2)) {
-                    $("#invalidCustomInput").attr('class', '.text-danger');
-                    //prevents posting
-                    return false;
+            if (blockComparison != "_isEmpty_") {
+                if (custom) {
+                    blockField2 = $("#customInput").val();
+                    if (/['"#<>$_\/]/.test(blockField2)) {
+                        $("#invalidCustomInput").attr('class', '.text-danger');
+                        //prevents posting
+                        return false;
+                    }
+                    blockFieldName2 = blockField2;
+                } else {
+                    blockField2 = $("#blockField2").val();
+                    blockFieldName2 = $("#blockField2").find(":selected").text();
                 }
-                blockFieldName2 = blockField2;
             } else {
-                blockField2 = $("#blockField2").val();
-                blockFieldName2 = $("#blockField2").find(":selected").text();
+                blockField2 = "";
+                blockFieldName2 = "";
             }
             var html = '';
             html += '<div class=expressionBlock>'
             html += '<input type="hidden" name="CodeExpression" value ="' + blockField + " " + blockComparison + " " + blockField2 + ' " />';
             html += '<input type="hidden" name="ViewExpression" value ="' + blockFieldName + " " + blockComparisonName + " " + blockFieldName2 + ' " />';
             html += '<input type="hidden" name = "DependantFieldID1" value="' + blockField.match(/\d+/)[0] + '" />'
-            if (!custom) {
+            if (!custom && blockComparison != "_isEmpty_") {
                 html += '<input type="hidden" name = "DependantFieldID2" value="' + blockField2.match(/\d+/)[0] + '" />'
             }
             html += '</div>'
@@ -201,6 +206,14 @@
             addConjunction(this);
         })
 
+        $("#blockComparison").change(function () {
+            alert("bc changed")
+            //if the custom input box is up hide it
+            toggleCustomInput();
+            //remove the block Field2 Dropdown as it is not needed
+            toggleBlockField2();
+        })
+
         $(document).ready(function () {
             toggleCustomInput();
         })
@@ -210,12 +223,26 @@
         })
 
         function toggleCustomInput() {
-            var showInput = $("#blockField2").find(":selected").val() == "#custom#";
+            var compVal = $("#blockComparison").find(":selected").val();
+            var showInput = $("#blockField2").find(":selected").val() == "#custom#" &&  compVal != "_isEmpty_";
             if (showInput) {
                 var type = $("#blockField").find(":selected").attr("type");
                 $("#customInput").prop('type', type);
             } else {
                 $("#customInput").prop('type', 'hidden');
+            }
+        }
+
+        function toggleBlockField2() {
+            var compVal = $("#blockComparison").find(":selected").val();
+            var showBF2 = compVal != "_isEmpty_";
+            alert("toggling bf2: " + compVal + " " + showBF2);
+            if (showBF2) {
+                $("#blockField2").attr("class", "form-control-sm");
+            } else {
+                $("#customInput").attr("value", "");
+                $("#invalidCustomInput").attr('class', 'd-none');
+                $("#blockField2").attr("class", "d-none");
             }
         }
 

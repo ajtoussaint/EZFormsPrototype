@@ -1,5 +1,6 @@
 ﻿
 @using EZFormsPrototype.Models; 
+@using System.Text.RegularExpressions
 
 @model EZFormsPrototype.ViewModels.FillableForm
 
@@ -17,7 +18,7 @@
     {
         <div>
             <h3>@Html.DisplayFor(ModelItem => field.Name)</h3>
-            <input type=@(field.Type) name=@(field.Name) id=@("Field" + field.ID) />
+            @if (field.Type == "dollarAmount") {<text>$</text>}<input type=@(field.Type) name=@(field.Name) id=@("Field" + field.ID) />
             @foreach(Flag flag in Model.Flags)
             {
                 //TODO: might be better to bundle these on the controller similar to how the Expression Blocks work
@@ -50,7 +51,7 @@
             $("@("#Field"+ field.ID)").change(function () {
                 alert("@("a change has been made to field: " + field.Name)");
                 //run the flag function for each flag that has a depdnecy on this field
-               @{ 
+               @{
                    HashSet<int> flagIDs = new HashSet<int>();
                    foreach(Flag flag in Model.Flags)
                    {
@@ -83,28 +84,31 @@
                     {
                         if(block.DependantFieldID1 != 0) {
                             <text>
-                            var @("DField1of" + block.ID.ToString()) = $("@("#Field" + block.DependantFieldID1)").val();
+                            var @("$DField1of" + block.ID.ToString()) = $("@("#Field" + block.DependantFieldID1)").val();
                             </text>
                         }
                         if(block.DependantFieldID2 != 0)
                         {
                             <text>
-                            var @("DField2of" + block.ID.ToString()) = $("@("#Field" + block.DependantFieldID2)").val();
+                            var @("$DField2of" + block.ID.ToString()) = $("@("#Field" + block.DependantFieldID2)").val();
                             </text>
                         }
                         //TODO: might be able to preformat this replace string depening on how I code the above
-                        expression += block.CodeExpression.Replace("#" + block.DependantFieldID1, "DField1of" + block.ID.ToString()).Replace("#" + block.DependantFieldID2, "DField2of" + block.ID.ToString());
+                        expression += block.CodeExpression.Replace("#" + block.DependantFieldID1, "$DField1of" + block.ID.ToString()).Replace("#" + block.DependantFieldID2, "$DField2of" + block.ID.ToString());
                     }
+                    //format expression for isEmpty Function
+                    //TODO: add the isEmpty Function
+                    @{expression = Regex.Replace(expression, @"(\$DField\d+of\d+) _([a-zA-Z0-9]+)_", "$2($1)");}
                     //evaluate the flag expression
-                    //TODO: expressions are puttin &gt; in the jquery instead of >
-                    //var result = @(expression);
+                    var result = @(Html.Raw(expression))
                     //if the expression evaluates to TRUE remove d-none class
-                    if(true){
+                    if(result){
                         $("@("#Flag" + flag.ID)").attr("class", "");
                     } else {
+                        //else add the dnone class to the div
                         $("@("#Flag" + flag.ID)").attr("class", "d-none");
                     }
-                    //else add the dnone class to the div
+                    
                 }
             </text>
         }
