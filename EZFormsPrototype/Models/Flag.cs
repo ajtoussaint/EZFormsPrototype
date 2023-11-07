@@ -14,6 +14,7 @@ namespace EZFormsPrototype.Models
         [RegularExpression("[a-zA-Z0-9-]+")]
         public string Name { get; set; }
         public string Message { get; set; }
+        //trigger expression is deprecated
         public string TriggerExpression { get; set; }
         public string Level { get; set; }
         public int FieldID { get; set; }

@@ -138,7 +138,8 @@ namespace EZFormsPrototype.Controllers
             FinalResult res = new FinalResult();
             foreach(string key in form.AllKeys)
             {
-                res.addResult(key, form[key]);
+                if (form[key] != "")
+                    res.addResult(key, form[key]);
             }
             res.FormTitle = form["Form.Title"];
             res.FormDescription = form["Form.Description"];
