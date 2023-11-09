@@ -7,6 +7,7 @@ using EZFormsPrototype.Models;
 using EZFormsPrototype.Utility;
 using System.Data.Entity;
 using EZFormsPrototype.ViewModels;
+using System.Collections.ObjectModel;
 
 namespace EZFormsPrototype.Controllers
 {
@@ -57,7 +58,19 @@ namespace EZFormsPrototype.Controllers
             }
             ViewBag.Level = DropDownListUtility.GetFlagLevelDropdown(flag.Level);
             ViewBag.ExpressionBlocks = db.ExpressionBlocks.Where(e => e.FlagID == id).OrderBy(e => e.Order).ToList();
-            ViewBag.Fields = db.Fields.Where(f => f.FormID == flag.FormID).ToList();
+            List<FormField> fields = db.FormFields.Where(f => f.FormID == flag.FormID).ToList();
+            ViewBag.Fields = fields;
+            //send a hash map with table ID as key and list of fields as value
+            Dictionary<int, List<TableField>> tableFields = new Dictionary<int, List<TableField>>();
+            foreach(Field field in fields)
+            {
+                if (field.Type == "table")
+                {
+                    tableFields.Add(field.ID, db.TableFields.Where(f => f.TableID == field.ID).ToList());    
+                }
+            }
+            ViewBag.TableFields = tableFields;
+            List<int> x = new List<int>(tableFields.Keys);
             return View(flag);
         }
 

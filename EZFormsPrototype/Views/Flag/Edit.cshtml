@@ -1,4 +1,5 @@
 ﻿@using EZFormsPrototype.Utility
+@using EZFormsPrototype.Models
 @model EZFormsPrototype.Models.Flag
 
 @{
@@ -45,38 +46,62 @@
         Expression Builder:
         <table id="buildButtons" class="border">
             <tr>
+                <th class="d-none" id="compTypeHeader">Select how table fields are analyzed</th>
+                <th class="d-none" id="tableFieldHeader">Select table column</th>
+                <th></th>
                 <th class="text-wrap">Select a Field to Evaluate</th>
                 <th class="text-wrap">Select a Comparison</th>
                 <th class="text-wrap">Select a field or Value to compare to</th>
             </tr>
             <tr>
+                <td class="d-none" id="compTypeColumn">
+                    <select class="form-control-sm" id="compType">
+                        <option value="_single" selected="selected" id="singleOption">Single</option>
+                        <option value="_any">Any</option>
+                        <option value="_all">All</option>
+                        <option value="_none">None</option>
+                    </select>
+                </td>
+                <td class="d-none" id="tableFieldColumn">
+                    <select class="form-control-sm" id="tableField">
+                        <!--populates with options when a table is selected-->
+                    </select>
+                </td>
+                <td id="tableIn" class="d-none">
+                    <div>
+                        In:
+                    </div>
+                </td>
                 <td>
                     <select class="form-control-sm" id="blockField">
                         @foreach (var field in ViewBag.Fields)
                         {
                             //TODO: Select the field associated with this flag by default
-                            <option type=@(field.Type) value=@("#" + field.ID)>@(field.Name)</option>
+                            <option type=@(field.Type) value=@("_" + field.ID + "_")>@(field.Name)</option>
                         }
                     </select>
                 </td>
                 <td>
                     <select class="form-control-sm" id="blockComparison">
-                        <option value=">">></option>
-                        <option value="<"><</option>
-                        <option value=">=">>=</option>
-                        <option value="<="><=</option>
-                        <option value="==">=</option>
-                        <option value="!=">does not equal</option>
-                        <option value="_isEmpty_">is empty</option>
+                        <option value="_gt">></option>
+                        <option value="_lt"><</option>
+                        <option value="_gte">>=</option>
+                        <option value="_lte"><=</option>
+                        <option value="_equals">=</option>
+                        <option value="_notEquals">does not equal</option>
+                        <option value="_isEmpty">is empty</option>
                     </select>
                 </td>
                 <td>
-                    <select class="form-control-sm" id="blockField2">
+                    <select class="form-control-sm" id="blockField2" recorded=true>
                         @foreach (var field in ViewBag.Fields)
                         {
-                            <option value=@("#" + field.ID)>@(field.Name)</option>
+                            if (field.Type != "table")
+                            {
+                                <option value=@("_" + field.ID + "_")>@(field.Name)</option>
+                            }
                         }
-                        <option value="#custom#">Custom</option>
+                        <option value="#custom#" recorded=false>Custom</option>
                     </select>
                     <input type="hidden" id="customInput" />
                     <div id="invalidCustomInput" class="d-none alert-danger" >Input cannot contain specail characters: ' " / < > # $ _</div>
@@ -139,44 +164,70 @@
 
 @section Scripts{
     <script>
-        $("#postBlock").click(function () {
-            //TODO: Sanitize user input for text
 
+        $("#postBlock").click(function () {
             //add html that represents the block to the expressionSpace so it will be posted to the action result for processing
             //The block has a hidden input with the expression value
+            var blockField2;
+            var blockFieldName2;
+            var custom = $("#blockField2").find(":selected").val() == "#custom#";
+
+            if ($("#blockField2").attr("recorded") == "true") {
+                blockField2 = $("#blockField2").val();
+                blockFieldName2 = $("#blockField2").find(":selected").text();
+            } else if ($("#customInput").attr("recorded") == "true") {
+                blockField2 = $("#customInput").val();
+                if (/['"#<>$_\/]/.test(blockField2)) {
+                    $("#invalidCustomInput").attr('class', '.text-danger');
+                    //prevents posting
+                    return false;
+                }
+                blockFieldName2 = blockField2;
+            } else {
+                blockField2 = null;
+                blockFieldName2 = null;
+            }
+
             var blockField = $("#blockField").val();
             var blockFieldName = $("#blockField").find(":selected").text();
             var blockComparison = $("#blockComparison").val();
             var blockComparisonName = $("#blockComparison").find(":selected").text();
-            var blockField2
-            var blockFieldName2
-            var custom = $("#blockField2").find(":selected").val() == "#custom#";
-            if (blockComparison != "_isEmpty_") {
-                if (custom) {
-                    blockField2 = $("#customInput").val();
-                    if (/['"#<>$_\/]/.test(blockField2)) {
-                        $("#invalidCustomInput").attr('class', '.text-danger');
-                        //prevents posting
-                        return false;
-                    }
-                    blockFieldName2 = blockField2;
-                } else {
-                    blockField2 = $("#blockField2").val();
-                    blockFieldName2 = $("#blockField2").find(":selected").text();
-                }
-            } else {
-                blockField2 = "";
-                blockFieldName2 = "";
-            }
+            var comparisonType = $("#compType").val();
+            var tableField = $("#tableField").val();
+            var tableFieldName = $("#tableField").find(":selected").text();
+
             var html = '';
             html += '<div class=expressionBlock>'
-            html += '<input type="hidden" name="CodeExpression" value ="' + blockField + " " + blockComparison + " " + blockField2 + ' " />';
-            html += '<input type="hidden" name="ViewExpression" value ="' + blockFieldName + " " + blockComparisonName + " " + blockFieldName2 + ' " />';
+            //TODO: if doing table then use table Field instead of blockField
+            var code = '<input type="hidden" name="CodeExpression" value ="' + comparisonType + '(' + blockComparison + ', ';
+            if (comparisonType != "_single") {
+                code += tableField;
+            } else {
+                code += blockField;
+            }
+            code += ', ' + blockField2 + ')" />';
+            //console.log("CODE: " + code);
+            html += code;
+
+            var view = '<input type="hidden" name="ViewExpression" value ="';
+            if (comparisonType != "_single") {
+                var comparisonTypeName = $("#compType").find(":selected").text();
+                view += comparisonTypeName + " " + tableFieldName + " in ";
+            }
+            view += "" + blockFieldName + " " + blockComparisonName + " ";
+            if (blockField2) {
+                view += blockFieldName2;
+            }
+            view += ' " />';
+            //console.log("VIEW: ", view);
+            html += view;
+
             html += '<input type="hidden" name = "DependantFieldID1" value="' + blockField.match(/\d+/)[0] + '" />'
-            if (!custom && blockComparison != "_isEmpty_") {
+            if (blockField2) {
                 html += '<input type="hidden" name = "DependantFieldID2" value="' + blockField2.match(/\d+/)[0] + '" />'
             }
             html += '</div>'
+
             $("#expressionSpace").append(html);
             var action = $("form").attr("action");
             action = action.replace(/Flag\/[\w]+\//, "Flag/AddBlock/");
@@ -207,11 +258,11 @@
         })
 
         $("#blockComparison").change(function () {
-            alert("bc changed")
-            //if the custom input box is up hide it
-            toggleCustomInput();
+            console.log("bc changed")
             //remove the block Field2 Dropdown as it is not needed
             toggleBlockField2();
+            //if the custom input box is up hide it
+            toggleCustomInput();
         })
 
         $(document).ready(function () {
@@ -223,26 +274,37 @@
         })
 
         function toggleCustomInput() {
-            var compVal = $("#blockComparison").find(":selected").val();
-            var showInput = $("#blockField2").find(":selected").val() == "#custom#" &&  compVal != "_isEmpty_";
+            var bf2 = $("#blockField2");
+            var customInput = $("#customInput");
+            var showInput = bf2.find(":selected").val() == "#custom#" &&  bf2.attr("class") != "d-none";
             if (showInput) {
                 var type = $("#blockField").find(":selected").attr("type");
-                $("#customInput").prop('type', type);
+                bf2.attr("recorded", false);
+                customInput.prop('type', type);
+                customInput.attr("recorded", true);
             } else {
-                $("#customInput").prop('type', 'hidden');
+                if (bf2.attr("class") != "d-none") {
+                    bf2.attr("recorded", true);
+                }
+                customInput.prop('type', 'hidden');
+                customInput.attr("recorded", false);
             }
         }
 
         function toggleBlockField2() {
             var compVal = $("#blockComparison").find(":selected").val();
-            var showBF2 = compVal != "_isEmpty_";
-            alert("toggling bf2: " + compVal + " " + showBF2);
+            var showBF2 = compVal != "_isEmpty";
+            var bf2 = $("#blockField2");
             if (showBF2) {
-                $("#blockField2").attr("class", "form-control-sm");
+                bf2.attr("class", "form-control-sm");
+                bf2.attr("recorded", true);
+                toggleCustomInput();
             } else {
                 $("#customInput").attr("value", "");
                 $("#invalidCustomInput").attr('class', 'd-none');
-                $("#blockField2").attr("class", "d-none");
+                bf2.attr("class", "d-none");
+                bf2.attr("recorded", false);
+                toggleCustomInput();
             }
         }
 
@@ -258,6 +320,66 @@
             var action = $("form").attr("action");
             action = action.replace(/Flag\/[\w]+\//, "Flag/AddBlock/");
             $("form").attr("action", action);
+        }
+
+        $("#blockField").change(function () {
+            var table = $(this).find(":selected")
+            if (table.attr("type") == "table") {
+                toggleTableControlls(parseInt(table.val().match(/\d+/)[0]))
+            } else {
+                toggleTableControlls(-1);
+            }
+        })
+
+        //function to get table fields returns html options
+        function getTableFields(tableID) {
+            var html = '';
+            switch (tableID) {
+                @foreach(int id in new List<int>(ViewBag.tableFields.Keys))
+                {
+                    <text>
+                        case @(id):
+                        @foreach(TableField field in ViewBag.tableFields[id])
+                        {
+                            <text>
+                                html += '<option type=@(field.Type) value=@("_" + field.ID + "_")>@(field.Name)</option>'
+                            </text>
+                        }
+                        break;
+                    </text>
+                }
+            }
+            return html;
+        }
+
+        function toggleTableControlls(table) {
+            var compHeader = $("#compTypeHeader");
+            var fieldHeader = $("#tableFieldHeader");
+            var compColumn = $("#compTypeColumn");
+            var fieldColumn = $("#tableFieldColumn");
+            var tableIn = $("#tableIn");
+            if (table >= 0) {
+                //show the two header columns and three cells
+                compHeader.attr("class", "");
+                fieldHeader.attr("class",  "");
+                compColumn.attr("class",  "");
+                fieldColumn.attr("class", "");
+                tableIn.attr("class", "")
+                //populate
+                $("#tableField").append(getTableFields(table));
+                //remove single option from dropdown
+                $("#singleOption").remove();
+            } else {
+                //hide columns and cells
+                compHeader.attr("class",  "d-none");
+                fieldHeader.attr("class",  "d-none");
+                compColumn.attr("class",  "d-none");
+                fieldColumn.attr("class", "d-none");
+                tableIn.attr("class", "d-none");
+                //depopulate
+                $("#tableField").empty();
+                $("#compType").prepend('<option value="_single" selected="selected" id="singleOption">Single</option>');
+            }
         }
 
     </script>
