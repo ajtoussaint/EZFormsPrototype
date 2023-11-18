@@ -121,7 +121,19 @@
         }
 
         function _any(func, f1, f2) {
+            //when any is called f1 will be a jquery selection of objects whose class match the desired ID
+            var res = false;
+            f1.each(function () {
+                var result = false
+                if (f2 === null) {
+                    result = func($(this).val());
+                } else {
+                    result = func($(this).val(), f2);
+                }
+                res = res || result
+            })
 
+            return res;
         }
 
         @foreach(Field field in Model.Fields)
@@ -173,7 +185,7 @@
                     @foreach (int id in flag.DependantFieldIDs)
                     {
                         <text>
-                            @(Html.Raw("var _" + id + "_ = $(\"#Field" + id + "\").val();"))
+                            @(Html.Raw("var _" + id + "_ = ($(\"#Field" + id + "\").length ? $(\"#Field" + id + "\").val() : $(\".Field" + id +"\"));"))
                         </text>
                     }
                     //evaluate the flag expression
