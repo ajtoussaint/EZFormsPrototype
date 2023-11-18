@@ -22,5 +22,8 @@ namespace EZFormsPrototype.Models
 
         public List<ExpressionBlock> ExpressionBlocks { get; set; }
 
+        public virtual List<int> DependantFieldIDs { get; set; }
+        public virtual List<string> CodeExpressions { get; set; }
+
     }
 }

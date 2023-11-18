@@ -52,20 +52,7 @@
             $("@("#Field"+ field.ID)").change(function () {
                 alert("@("a change has been made to field: " + field.Name)");
                 //run the flag function for each flag that has a depdnecy on this field
-               @{
-                   HashSet<int> flagIDs = new HashSet<int>();
-                   foreach(Flag flag in Model.Flags)
-                   {
-                       foreach(ExpressionBlock block in flag.ExpressionBlocks)
-                        {
-                           if(block.DependantFieldID1 == field.ID || block.DependantFieldID2 == field.ID)
-                            {
-                               flagIDs.Add(flag.ID);
-                            }
-                        }
-                   }
-               }
-                @foreach(int flagID in flagIDs)
+                @foreach(int flagID in field.DependentFlagIDs)
                 {
                    <text>
                     @("updateFlag" + flagID + "();")
