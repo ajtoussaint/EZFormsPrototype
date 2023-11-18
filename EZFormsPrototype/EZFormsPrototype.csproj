@@ -184,6 +184,10 @@
     <Compile Include="Migrations\202311041930069_addEBlockListToFlag.designer.cs">
       <DependentUpon>202311041930069_addEBlockListToFlag.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202311181352124_minorUpdates.cs" />
+    <Compile Include="Migrations\202311181352124_minorUpdates.designer.cs">
+      <DependentUpon>202311181352124_minorUpdates.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ExpressionBlock.cs" />
     <Compile Include="Models\Field.cs" />
@@ -334,6 +338,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202311041930069_addEBlockListToFlag.resx">
       <DependentUpon>202311041930069_addEBlockListToFlag.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202311181352124_minorUpdates.resx">
+      <DependentUpon>202311181352124_minorUpdates.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

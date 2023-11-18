@@ -123,11 +123,10 @@ namespace EZFormsPrototype.Controllers
             FillableForm ViewModel = new FillableForm();
             ViewModel.Form = db.Forms.Find(id);
             ViewModel.Fields = db.FormFields.Where(f => f.FormID == ViewModel.Form.ID).ToList();
-            ViewModel.TableFields = db.TableFields.Where(f => f.FormID == ViewModel.Form.ID).ToList();
+            //ViewModel.TableFields = db.TableFields.Where(f => f.FormID == ViewModel.Form.ID).ToList();
             List<Flag> flags = db.Flags.Where(f => f.FormID == ViewModel.Form.ID).ToList();
             foreach(Flag flag in flags)
             {
-                flag.ExpressionBlocks = db.ExpressionBlocks.Where(e => e.FlagID == flag.ID).OrderBy(e => e.Order).ToList();
                 flag.CodeExpressions = db.ExpressionBlocks.Where(e => e.FlagID == flag.ID).OrderBy(e => e.Order).Select(e => e.CodeExpression).ToList();
                 flag.DependantFieldIDs = db.ExpressionBlocks.Where(e => e.FlagID == flag.ID && e.DependantFieldID1 != 0).Select(e => e.DependantFieldID1)
                     .Union(db.ExpressionBlocks.Where(e => e.FlagID == flag.ID && e.DependantFieldID2 != 0).Select(e => e.DependantFieldID2)).Distinct().ToList();
@@ -137,8 +136,18 @@ namespace EZFormsPrototype.Controllers
             {
                 //get all flag IDs that need to be updated when the field changes
                 field.DependentFlagIDs = db.Flags.Join(db.ExpressionBlocks.Where(e => e.DependantFieldID1 == field.ID || e.DependantFieldID2 == field.ID), flag => flag.ID, eb => eb.FlagID, (flag, eb) => flag.ID).Distinct().ToList();
+                //get the table fields for any field that is a table
+                if(field.Type == "table")
+                {
+                    field.TableFields = db.TableFields.Where(f => f.TableID == field.ID).ToList();
+                }
             }
-            
+            ViewModel.TableFields = db.TableFields.Where(f => f.FormID == ViewModel.Form.ID).ToList();
+            foreach(TableField tf in ViewModel.TableFields)
+            {
+                tf.DependentFlagIDs = db.Flags.Join(db.ExpressionBlocks.Where(e => e.DependantFieldID1 == tf.ID || e.DependantFieldID2 == tf.ID), flag => flag.ID, eb => eb.FlagID, (flag, eb) => flag.ID).Distinct().ToList();
+            }
+
             return View(ViewModel);
         }
 

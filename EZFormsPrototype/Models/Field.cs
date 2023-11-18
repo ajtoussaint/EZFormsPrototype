@@ -18,6 +18,8 @@ namespace EZFormsPrototype.Models
         public virtual List<string> TableFieldNames {  get; set; }
         public virtual List<string> TableFieldTypes { get; set; }
 
-        public virtual List<int> DependentFlagIDs { get; set; }
+        public virtual List<TableField> TableFields { get; set; }
+
+        public virtual List<int> DependentFlagIDs { get; set; } 
     }
 }

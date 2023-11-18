@@ -200,11 +200,12 @@
             html += '<div class=expressionBlock>'
             //TODO: if doing table then use table Field instead of blockField
             var code = '<input type="hidden" name="CodeExpression" value ="' + comparisonType + '(' + blockComparison + ', ';
-            if (comparisonType != "_single") {
+            code += (comparisonType != "_single" ? tableField : blockField);
+            /*if (comparisonType != "_single") {
                 code += tableField;
             } else {
                 code += blockField;
-            }
+            }*/
             code += ', ' + blockField2 + ')" />';
             //console.log("CODE: " + code);
             html += code;
@@ -222,9 +223,9 @@
             //console.log("VIEW: ", view);
             html += view;
 
-            html += '<input type="hidden" name = "DependantFieldID1" value="' + blockField.match(/\d+/)[0] + '" />'
+            html += '<input type="hidden" name = "DependantFieldID1" value="' + (comparisonType != "_single" ? tableField : blockField).match(/\d+/)[0] + '" />'
             if (blockField2) {
-                html += '<input type="hidden" name = "DependantFieldID2" value="' + blockField2.match(/\d+/)[0] + '" />'
+                html += '<input type="hidden" name = "DependantFieldID2" value="' + (/_\d+_/.test(blockField2) ? blockField2.replace(/_(\d+)_/, "$1") : "0") + '" />'
             }
             html += '</div>'
 

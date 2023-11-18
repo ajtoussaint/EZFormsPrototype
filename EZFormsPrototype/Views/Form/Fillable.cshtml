@@ -18,16 +18,52 @@
     {
         <div>
             <h3>@Html.DisplayFor(ModelItem => field.Name)</h3>
-            @if (field.Type == "dollarAmount") {<text>$</text>}<input type=@(field.Type) name=@(field.Name) id=@("Field" + field.ID) />
-            @foreach(Flag flag in Model.Flags)
+            @if (field.Type != "table")
+            {
+                <text>
+                    @if (field.Type == "dollarAmount"){<text>$</text>}<input type=@(field.Type) name=@(field.Name) id=@("Field" + field.ID) />
+                </text>
+            }
+            else
+            {
+                //for table fields create an extensible table
+                <text>
+                    <table id=@("Field" + field.ID)>
+                        <tr>
+                    @foreach(TableField tf in field.TableFields)
+                    {
+                            <text>
+                            <th>@(tf.Name)</th>
+                            </text>
+                    } 
+                        </tr>
+                        <tr>
+                    @foreach (TableField tf in field.TableFields)
+                    {
+                        <text>
+                            <td>
+                               <input type="@(tf.Type)" name="@(tf.Name)" class="@("Field" + tf.ID)" />
+                            </td>
+                        </text>
+                    }
+                            <td>
+                                <button type="button" value="_@(field.ID)_" class="removeRow btn btn-danger">X</button>
+                            </td>
+                        </tr>
+                    </table>
+                    <button type="button" value="_@(field.ID)_" class="addRow btn btn-info">Add Row to Table</button>
+                </text>
+            }
+
+            @foreach (Flag flag in Model.Flags)
             {
                 //TODO: might be better to bundle these on the controller similar to how the Expression Blocks work
-                if(flag.FieldID == field.ID)
+                if (flag.FieldID == field.ID)
                 {
                     <div id=@("Flag" + flag.ID) class="d-none">
                         <h4>@flag.Name</h4>
                         <p>@flag.Message</p>
-                        <input type="text" name=@("flagResponse"+flag.ID) id="flagResponse"/>
+                        <input type="text" name=@("flagResponse"+flag.ID) id="flagResponse" />
                     </div>
                 }
             }
@@ -46,7 +82,7 @@
 {
     <script>
         //define comparison functions
-        
+
         function _gt(f1, f2) {
             return f1 > f2;
         }
@@ -84,22 +120,50 @@
             }
         }
 
+        function _any(func, f1, f2) {
+
+        }
+
         @foreach(Field field in Model.Fields)
         {
-            <text>
-            //runs every time the field is updated
-            $("@("#Field"+ field.ID)").change(function () {
-                alert("@("a change has been made to field: " + field.Name)");
-                //run the flag function for each flag that has a depdnecy on this field
-                @foreach(int flagID in field.DependentFlagIDs)
-                {
-                   <text>
-                    @("updateFlag" + flagID + "();")
-                   </text>
-                }
-            })
-            </text>
+            if (field.Type != "table")
+            {
+                <text>
+                //runs every time the field is updated
+                $("@("#Field" + field.ID)").change(function () {
+                    alert("@("a change has been made to field: " + field.Name)");
+                    //run the flag function for each flag that has a depdnecy on this field
+                    @foreach (int flagID in field.DependentFlagIDs)
+                    {
+                       <text>
+                        @("updateFlag" + flagID + "();")
+                       </text>
+                    }
+                })
+                </text>
+            }
         }
+
+        //define functions that run when a table function is updated and the jquery calls to those functions on normal update
+
+        @foreach(TableField tf in Model.TableFields)
+    {
+        <text>
+            function updateField@(tf.ID)() {
+                alert("a change has been made to a table field: @(tf.Name)");
+                @foreach(int flagID in tf.DependentFlagIDs)
+                {
+                    <text>
+                     @("updateFlag" + flagID + "();")
+                    </text>
+                }
+            }
+            $(document).on('change', ".Field@(tf.ID)", updateField@(tf.ID));
+        </text>
+    }
+
+
+
         @foreach (Flag flag in Model.Flags)
         {
             <text>
@@ -127,12 +191,12 @@
                         //else add the dnone class to the div
                         $("@("#Flag" + flag.ID)").attr("class", "d-none");
                     }
-                    
+
                 }
             </text>
         }
 
-        
+
 
         $("#fillableForm").on("submit", function (e) {
             //if there is a visible flag with no response prevent submitting
@@ -144,6 +208,40 @@
                 }
             })
             return allowSubmission;
+        })
+
+    //define row html for each field of type table to be added as a new row
+        var html_rows = {}
+        var tableFields = {}
+   @foreach(Field field in Model.Fields.Where(f => f.Type == "table"))
+    {
+            <text>
+        var html = "";
+        tableFields["_@(field.ID)_"] = [];
+            </text>
+           foreach(TableField tf in field.TableFields)
+            {
+               <text>
+                     html += "<td><input type=\"@(tf.Type)\" name=\"@(tf.Name)\" class=\"@("Field" + tf.ID)\" </td>";
+                    tableFields["_@(field.ID)_"].push(updateField@(tf.ID));
+                </text>
+            }
+            <text>
+        html += "<td><button type=\"button\" value=\"_@(field.ID)_\" class=\"removeRow btn btn-danger\">X</button></td>";
+        html_rows["_@(field.ID)_"] = html;
+            </text>
+    }
+
+        $(".addRow").on('click', function () {
+            //add a row to the table associated with this button
+            $("#Field" + $(this).val().match(/\d+/)[0]).append("<tr>" + html_rows[$(this).val()] + "</tr>");
+        })
+
+        $(document).on('click', '.removeRow', function () {
+            $(this).parent().parent().remove();
+            tableFields[$(this).val()].forEach(func => {
+                func();
+            })
         })
 
     </script>
