@@ -128,8 +128,9 @@ namespace EZFormsPrototype.Controllers
             foreach(Flag flag in flags)
             {
                 flag.ExpressionBlocks = db.ExpressionBlocks.Where(e => e.FlagID == flag.ID).OrderBy(e => e.Order).ToList();
-                flag.CodeExpressions = db.ExpressionBlocks.Select(e => e.CodeExpression).ToList();
-                flag.DependantFieldIDs = db.ExpressionBlocks.Select(e => e.DependantFieldID1).Union(db.ExpressionBlocks.Select(e => e.DependantFieldID2)).Distinct().ToList();
+                flag.CodeExpressions = db.ExpressionBlocks.Where(e => e.FlagID == flag.ID).OrderBy(e => e.Order).Select(e => e.CodeExpression).ToList();
+                flag.DependantFieldIDs = db.ExpressionBlocks.Where(e => e.FlagID == flag.ID && e.DependantFieldID1 != 0).Select(e => e.DependantFieldID1)
+                    .Union(db.ExpressionBlocks.Where(e => e.FlagID == flag.ID && e.DependantFieldID2 != 0).Select(e => e.DependantFieldID2)).Distinct().ToList();
             }
             ViewModel.Flags = flags;
             foreach(Field field in ViewModel.Fields)

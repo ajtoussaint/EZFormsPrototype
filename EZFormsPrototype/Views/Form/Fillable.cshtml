@@ -45,6 +45,45 @@
 @section Scripts
 {
     <script>
+        //define comparison functions
+        
+        function _gt(f1, f2) {
+            return f1 > f2;
+        }
+
+        function _lt(f1, f2) {
+            return f1 < f2;
+        }
+
+        function _gte(f1, f2){
+            return f1 >= f2;
+        }
+
+        function _lte(f1, f2) {
+            return f1 <= f2;
+        }
+
+        function _equals(f1, f2) {
+            return f1 == f2;
+        }
+
+        function _notEquals(f1, f2) {
+            return f1 != f2;
+        }
+
+        function _isEmpty(f1) {
+            return !f1;
+        }
+
+        //define comparison type functions
+        function _single(func, f1, f2) {
+            if (f2 === null) {
+                return func(f1);
+            } else {
+                return func(f1, f2);
+            }
+        }
+
         @foreach(Field field in Model.Fields)
         {
             <text>
@@ -61,34 +100,26 @@
             })
             </text>
         }
-        @foreach(Flag flag in Model.Flags)
+        @foreach (Flag flag in Model.Flags)
         {
             <text>
                 function updateFlag@(flag.ID)() {
                     //alert("@("updating flag: " + flag.Name)");
                     //get the current value for each field referenced in the flag
-                    @{string expression = "";}
-                    @foreach (ExpressionBlock block in flag.ExpressionBlocks)
+                    @foreach (int id in flag.DependantFieldIDs)
                     {
-                        if(block.DependantFieldID1 != 0) {
-                            <text>
-                            var @("$DField1of" + block.ID.ToString()) = $("@("#Field" + block.DependantFieldID1)").val();
-                            </text>
-                        }
-                        if(block.DependantFieldID2 != 0)
-                        {
-                            <text>
-                            var @("$DField2of" + block.ID.ToString()) = $("@("#Field" + block.DependantFieldID2)").val();
-                            </text>
-                        }
-                        //TODO: might be able to preformat this replace string depening on how I code the above
-                        expression += block.CodeExpression.Replace("#" + block.DependantFieldID1, "$DField1of" + block.ID.ToString()).Replace("#" + block.DependantFieldID2, "$DField2of" + block.ID.ToString());
+                        <text>
+                            @(Html.Raw("var _" + id + "_ = $(\"#Field" + id + "\").val();"))
+                        </text>
                     }
-                    //format expression for isEmpty Function
-                    //TODO: add the isEmpty Function
-                    @{expression = Regex.Replace(expression, @"(\$DField\d+of\d+) _([a-zA-Z0-9]+)_", "$2($1)");}
                     //evaluate the flag expression
-                    var result = @(Html.Raw(expression))
+                    @{ string expression = String.Join(" ", flag.CodeExpressions);
+                       if(expression.Length <= 0)
+                        {
+                            expression = "true";
+                        }
+                     }
+                    var result = @(Html.Raw(expression));
                     //if the expression evaluates to TRUE remove d-none class
                     if(result){
                         $("@("#Flag" + flag.ID)").attr("class", "");
@@ -101,9 +132,7 @@
             </text>
         }
 
-        function _isEmpty(fieldValue) {
-            return !fieldValue;
-        }
+        
 
         $("#fillableForm").on("submit", function (e) {
             //if there is a visible flag with no response prevent submitting
