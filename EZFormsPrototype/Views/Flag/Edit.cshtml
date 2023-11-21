@@ -85,7 +85,7 @@
                         @foreach (var field in ViewBag.Fields)
                         {
                             //TODO: Select the field associated with this flag by default
-                            <option type=@(field.Type) value=@("_" + field.ID + "_")>@(field.Name)</option>
+                            <option type=@(field.Type) value=@("_" + field.ID + "_") @if(field.ID == Model.FieldID){<text>selected="selected"</text>} >@(field.Name)</option>
                         }
                     </select>
                 </td>
@@ -273,7 +273,7 @@
 
         $().ready(function () {
             toggleCustomInput();
-            updateBlockComparisonList($("blockField").find(":selected").attr("type"));
+            updateBlockComparisonList($("#blockField").find(":selected").attr("type"));
         })
 
         $("#blockField2").change(function () {
