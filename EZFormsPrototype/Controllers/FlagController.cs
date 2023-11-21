@@ -57,6 +57,7 @@ namespace EZFormsPrototype.Controllers
                 return HttpNotFound();
             }
             ViewBag.Level = DropDownListUtility.GetFlagLevelDropdown(flag.Level);
+            ViewBag.appearsOnSubmit = DropDownListUtility.GetFlagTriggerDropdown(flag.appearsOnSubmit);
             ViewBag.ExpressionBlocks = db.ExpressionBlocks.Where(e => e.FlagID == id).OrderBy(e => e.Order).ToList();
             List<FormField> fields = db.FormFields.Where(f => f.FormID == flag.FormID).ToList();
             ViewBag.Fields = fields;
@@ -76,7 +77,7 @@ namespace EZFormsPrototype.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Message,TriggerExpression,Level,FieldID,FormID,DependantFields,FlagConditions")] Flag flag)
+        public ActionResult Edit([Bind(Include = "ID,Name,Message,appearsOnSubmit,Level,FieldID,FormID,DependantFields,FlagConditions")] Flag flag)
         {
             if (ModelState.IsValid)
             {

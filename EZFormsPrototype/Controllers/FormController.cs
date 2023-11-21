@@ -132,10 +132,10 @@ namespace EZFormsPrototype.Controllers
                     .Union(db.ExpressionBlocks.Where(e => e.FlagID == flag.ID && e.DependantFieldID2 != 0).Select(e => e.DependantFieldID2)).Distinct().ToList();
             }
             ViewModel.Flags = flags;
-            foreach(Field field in ViewModel.Fields)
+            foreach(FormField field in ViewModel.Fields)
             {
                 //get all flag IDs that need to be updated when the field changes
-                field.DependentFlagIDs = db.Flags.Join(db.ExpressionBlocks.Where(e => e.DependantFieldID1 == field.ID || e.DependantFieldID2 == field.ID), flag => flag.ID, eb => eb.FlagID, (flag, eb) => flag.ID).Distinct().ToList();
+                field.DependentFlagIDs = db.Flags.Where(f => !f.appearsOnSubmit).Join(db.ExpressionBlocks.Where(e => e.DependantFieldID1 == field.ID || e.DependantFieldID2 == field.ID), flag => flag.ID, eb => eb.FlagID, (flag, eb) => flag.ID).Distinct().ToList();
                 //get the table fields for any field that is a table
                 if(field.Type == "table")
                 {

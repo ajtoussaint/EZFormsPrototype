@@ -188,6 +188,10 @@
     <Compile Include="Migrations\202311181352124_minorUpdates.designer.cs">
       <DependentUpon>202311181352124_minorUpdates.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202311211214215_tidyOnSubmit.cs" />
+    <Compile Include="Migrations\202311211214215_tidyOnSubmit.designer.cs">
+      <DependentUpon>202311211214215_tidyOnSubmit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ExpressionBlock.cs" />
     <Compile Include="Models\Field.cs" />
@@ -341,6 +345,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202311181352124_minorUpdates.resx">
       <DependentUpon>202311181352124_minorUpdates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202311211214215_tidyOnSubmit.resx">
+      <DependentUpon>202311211214215_tidyOnSubmit.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

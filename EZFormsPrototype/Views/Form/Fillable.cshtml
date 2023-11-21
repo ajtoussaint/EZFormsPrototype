@@ -14,7 +14,7 @@
 <form action="/Form/FinalResult" method="post" id="fillableForm">
     @Html.HiddenFor(ModelItem => Model.Form.Title)
     @Html.HiddenFor(ModelItem => Model.Form.Description)
-    @foreach (Field field in Model.Fields)
+    @foreach (FormField field in Model.Fields)
     {
         <div>
             <h3>@Html.DisplayFor(ModelItem => field.Name)</h3>
@@ -173,7 +173,7 @@
             return res;
         }
 
-        @foreach(Field field in Model.Fields)
+        @foreach(FormField field in Model.Fields)
         {
             if (field.Type != "table")
             {
@@ -181,7 +181,7 @@
                 //runs every time the field is updated
                 $("@("#Field" + field.ID)").change(function () {
                     alert("@("a change has been made to field: " + field.Name)");
-                    //run the flag function for each flag that has a depdnecy on this field
+                    //run the flag function for each flag that has a depdnecy on this field and is checked at data entry
                     @foreach (int flagID in field.DependentFlagIDs)
                     {
                        <text>
@@ -248,21 +248,29 @@
 
 
         $("#fillableForm").on("submit", function (e) {
+            //update all flags before submitting
+            @foreach (Flag flag in Model.Flags)
+            {
+               <text>
+                @("updateFlag" + flag.ID + "();")
+               </text>
+            }
             //if there is a visible flag with no response prevent submitting
             var allowSubmission = true;
             $("[id^=Flag]").each(function () {
                 if (!this.className && $(this).find("input").val() == "") {
-                    alert("Please satisfy or respond to all flags");
                     allowSubmission = false;
                 }
             })
+            if (!allowSubmission)
+                alert("Please satisfy or respond to all flags");
             return allowSubmission;
         })
 
     //define row html for each field of type table to be added as a new row
         var html_rows = {}
         var tableFields = {}
-   @foreach(Field field in Model.Fields.Where(f => f.Type == "table"))
+   @foreach(FormField field in Model.Fields.Where(f => f.Type == "table"))
     {
             <text>
         var html = "";

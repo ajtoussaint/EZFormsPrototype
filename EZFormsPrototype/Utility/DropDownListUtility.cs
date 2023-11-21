@@ -31,17 +31,12 @@ namespace EZFormsPrototype.Utility
             };
         }
 
-        public static IEnumerable<SelectListItem> GetComparisonDropdown(string selectedValue)
+        public static IEnumerable<SelectListItem> GetFlagTriggerDropdown(bool selectedValue)
         {
             return new List<SelectListItem>
             {
-                new SelectListItem { Text = ">", Value = ">", Selected = (">" == selectedValue)},
-                new SelectListItem { Text = "<", Value = "<", Selected = ("<" == selectedValue)},
-                new SelectListItem { Text = ">=", Value = ">=", Selected = (">=" == selectedValue)},
-                new SelectListItem { Text = "<=", Value = "<=", Selected = ("<=" == selectedValue)},
-                new SelectListItem { Text = "=", Value = "==", Selected = ("==" == selectedValue)},
-                new SelectListItem { Text = "does not equal", Value = "!=", Selected = ("!=" == selectedValue)},
-                new SelectListItem { Text = "is empty", Value = "_isEmpty_", Selected = ("_isEmpty" == selectedValue)}
+            new SelectListItem { Text = "Flag displays as soon as user input data meets the condition", Value = "false", Selected = (!selectedValue) },
+            new SelectListItem { Text = "Flag only displays if condition is met when user attempts to submit form.", Value = "true", Selected = (selectedValue)},
             };
         }
     }
