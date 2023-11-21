@@ -90,6 +90,10 @@
                         <option value="_equals">=</option>
                         <option value="_notEquals">does not equal</option>
                         <option value="_isEmpty">is empty</option>
+                        <option value="_like">matches the pattern:</option>
+                        <option value="_contains">contains the text:</option>
+                        <option value="_notLike">does not match the pattern:</option>
+                        <option value="_doesNotContain">does not contain the text:</option>
                     </select>
                 </td>
                 <td>
@@ -104,7 +108,8 @@
                         <option value="#custom#" recorded=false>Custom</option>
                     </select>
                     <input type="hidden" id="customInput" />
-                    <div id="invalidCustomInput" class="d-none alert-danger" >Input cannot contain specail characters: ' " / < > # $ _</div>
+                    <div id="likeTip" class="d-none">Use % as a wildcard, spaces matter</div>
+                    <div id="invalidCustomInput" class="d-none alert-danger">Input cannot contain specail characters: ' " / < > # $ _</div>
                 </td>
             </tr>
             <tr>
@@ -170,7 +175,6 @@
             //The block has a hidden input with the expression value
             var blockField2;
             var blockFieldName2;
-            var custom = $("#blockField2").find(":selected").val() == "#custom#";
 
             if ($("#blockField2").attr("recorded") == "true") {
                 blockField2 = $("#blockField2").val();
@@ -198,18 +202,11 @@
 
             var html = '';
             html += '<div class=expressionBlock>'
-            //TODO: if doing table then use table Field instead of blockField
             var code = '<input type="hidden" name="CodeExpression" value ="' + comparisonType + '(' + blockComparison + ', ';
             code += (comparisonType != "_single" ? tableField : blockField);
-            /*if (comparisonType != "_single") {
-                code += tableField;
-            } else {
-                code += blockField;
-            }*/
-            code += ', ' + blockField2 + ')" />';
-            //console.log("CODE: " + code);
+            code += ', \'' + blockField2 + '\')" />';
             html += code;
-
+            console.log(code);
             var view = '<input type="hidden" name="ViewExpression" value ="';
             if (comparisonType != "_single") {
                 var comparisonTypeName = $("#compType").find(":selected").text();
@@ -220,7 +217,6 @@
                 view += blockFieldName2;
             }
             view += ' " />';
-            //console.log("VIEW: ", view);
             html += view;
 
             html += '<input type="hidden" name = "DependantFieldID1" value="' + (comparisonType != "_single" ? tableField : blockField).match(/\d+/)[0] + '" />'
@@ -259,7 +255,8 @@
         })
 
         $("#blockComparison").change(function () {
-            console.log("bc changed")
+            //if the comparison is "like" show info on how to use
+            toggleLikeTip();
             //remove the block Field2 Dropdown as it is not needed
             toggleBlockField2();
             //if the custom input box is up hide it
@@ -306,6 +303,14 @@
                 bf2.attr("class", "d-none");
                 bf2.attr("recorded", false);
                 toggleCustomInput();
+            }
+        }
+
+        function toggleLikeTip() {
+            if ($("#blockComparison").val() == "_like") {
+                $("#likeTip").attr("class", "");
+            } else {
+                $("#likeTip").attr("class", "d-none");
             }
         }
 

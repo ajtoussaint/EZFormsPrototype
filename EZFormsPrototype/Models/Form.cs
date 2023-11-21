@@ -11,7 +11,6 @@ namespace EZFormsPrototype.Models
         [RegularExpression("[a-zA-Z0-9-]+")]
         public string Title { get; set; }
         public string Description { get; set; }
-
         public virtual ICollection<FormField> Fields { get; set; }
 
     }

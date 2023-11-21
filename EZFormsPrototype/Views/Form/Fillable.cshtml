@@ -84,19 +84,19 @@
         //define comparison functions
 
         function _gt(f1, f2) {
-            return f1 > f2;
+            return parseInt(f1) > parseInt(f2);
         }
 
         function _lt(f1, f2) {
-            return f1 < f2;
+            return parseInt(f1) < parseInt(f2);
         }
 
         function _gte(f1, f2){
-            return f1 >= f2;
+            return parseInt(f1) >= parseInt(f2);
         }
 
         function _lte(f1, f2) {
-            return f1 <= f2;
+            return parseInt(f1) <= parseInt(f2);
         }
 
         function _equals(f1, f2) {
@@ -109,6 +109,24 @@
 
         function _isEmpty(f1) {
             return !f1;
+        }
+
+        function _like(f1, f2) {
+            var regex = new RegExp("^" + f2.replace("%", "[A-Za-z0-9]") + "$", "ig");
+            return regex.test(f1);
+        }
+
+        function _contains(f1, f2) {
+            var regex = new RegExp(f2, "ig");
+            return regex.test(f1);
+        }
+
+        function _notLike(f1, f2) {
+            return !_like(f1, f2);
+        }
+
+        function _doesNotContain (f1, f2){
+            return !contains(f1, f2);
         }
 
         //define comparison type functions
@@ -131,6 +149,25 @@
                     result = func($(this).val(), f2);
                 }
                 res = res || result
+            })
+
+            return res;
+        }
+
+        function _none(func, f1, f2) {
+            return !_any(func, f1, f2);
+        }
+
+        function _all(func, f1, f2) {
+            var res = true;
+            f1.each(function () {
+                var result;
+                if (f2 === null) {
+                    result = func($(this).val());
+                } else {
+                    result = func($(this).val(), f2);
+                }
+                res = res && result
             })
 
             return res;

@@ -7,5 +7,6 @@ namespace EZFormsPrototype.Models
 {
     public class FormField : Field
     {
+        public virtual List<TableField> TableFields { get; set; }
     }
 }
