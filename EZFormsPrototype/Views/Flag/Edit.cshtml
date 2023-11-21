@@ -271,13 +271,44 @@
             toggleCustomInput();
         })
 
-        $(document).ready(function () {
+        $().ready(function () {
             toggleCustomInput();
+            updateBlockComparisonList($("blockField").find(":selected").attr("type"));
         })
 
         $("#blockField2").change(function () {
             toggleCustomInput();
         })
+
+        
+
+
+        function updateBlockComparisonList(type) {
+            if (!type) {
+                alert("no type was given so the default was used");
+                type = $("#blockField").find("option").attr("type")
+            }
+            if (type == 'table') {
+                type = $("#tableFieldColumn").find(":selected").attr("type");
+                if (!type) {
+                    alert("default table");
+                    type = $("#tableFieldColumn").find("option").attr("type")
+                }
+            }
+            alert("update Type: " + type);
+            var html = '';
+            switch (type) {
+                case "text":
+                    html += '<option value="_like">matches the pattern:</option>< option value = "_contains" > contains the text:</option ><option value="_notLike">does not match the pattern:</option><option value="_doesNotContain">does not contain the text:</option>';
+                    break;
+
+                case "number":
+                    html += '<option value="_gt">></option><option value="_lt"><</option><option value="_gte">>=</option><option value="_lte"><=</option><option value="_equals">=</option>'
+                    break;
+            }
+            html += '<option value="_equals">=</option><option value="_notEquals">does not equal</option><option value="_isEmpty">is empty</option>';
+            $("#blockComparison").html(html);
+        }
 
         function toggleCustomInput() {
             var bf2 = $("#blockField2");
@@ -337,12 +368,19 @@
         }
 
         $("#blockField").change(function () {
+            alert("bfchange");
             var table = $(this).find(":selected")
             if (table.attr("type") == "table") {
                 toggleTableControlls(parseInt(table.val().match(/\d+/)[0]))
             } else {
                 toggleTableControlls(-1);
             }
+            updateBlockComparisonList($(this).find(":selected").attr("type"));
+        })
+
+        $("#tableFieldColumn").on("change", function () {
+            alert("tf change");
+            updateBlockComparisonList("table");
         })
 
         //function to get table fields returns html options

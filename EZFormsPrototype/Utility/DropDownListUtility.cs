@@ -15,10 +15,10 @@ namespace EZFormsPrototype.Utility
             {
                 new SelectListItem { Text = "Number", Value = "number", Selected = ("number" == selectedValue)},
                 new SelectListItem { Text = "Text", Value = "text", Selected = ("text" == selectedValue)},
-                new SelectListItem { Text = "Date", Value = "date", Selected = ("date" == selectedValue)},
-                new SelectListItem { Text = "Time", Value = "time", Selected = ("time" == selectedValue)},
-                new SelectListItem { Text = "Date Time", Value = "dateTime", Selected = ("dateTime" == selectedValue)},
-                new SelectListItem { Text = "Dollar Amount", Value = "dollarAmount", Selected = ("dollarAmount" == selectedValue)},
+                //new SelectListItem { Text = "Date", Value = "date", Selected = ("date" == selectedValue)},
+                //new SelectListItem { Text = "Time", Value = "time", Selected = ("time" == selectedValue)},
+                //new SelectListItem { Text = "Date Time", Value = "dateTime", Selected = ("dateTime" == selectedValue)},
+                //new SelectListItem { Text = "Dollar Amount", Value = "dollarAmount", Selected = ("dollarAmount" == selectedValue)},
                 new SelectListItem { Text = "Table", Value = "table", Selected = ("table" == selectedValue)},
             };
         }
