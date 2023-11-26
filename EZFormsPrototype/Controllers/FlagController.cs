@@ -51,7 +51,7 @@ namespace EZFormsPrototype.Controllers
                 flag.userID = userID;
                 db.Flags.Add(flag);
                 db.SaveChanges();
-                return RedirectToAction("Edit", "Field", new { id = flag.FieldID });
+                return RedirectToAction("Edit", "Flag", new { id = flag.ID });
             }
             return RedirectToAction("Create", new { id = flag.FieldID });
         }
