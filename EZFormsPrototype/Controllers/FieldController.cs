@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using EZFormsPrototype.DAL;
 using EZFormsPrototype.Models;
+using EZFormsPrototype.ViewModels;
 using EZFormsPrototype.Utility;
 using Microsoft.AspNet.Identity;
 
@@ -104,11 +103,18 @@ namespace EZFormsPrototype.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes")] FormField field)
+        public ActionResult Edit([Bind(Include = "ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes,Redirect")] FieldEditViewModel data)
         {
+            Field field = new Field();
+            field.ID = data.ID;
+            field.FormID = data.FormID;
+            field.Name = data.Name;
+            field.Type = data.Type;
+            field.FormOrder = data.FormOrder;
+
             var userID = User.Identity.GetUserId();
             string id = db.Fields.AsNoTracking().Where(f => f.ID == field.ID).FirstOrDefault().userID;
-
+            
             if (ModelState.IsValid && userID == id)
             {
                 field.userID = userID;
@@ -121,12 +127,12 @@ namespace EZFormsPrototype.Controllers
                 if (field.Type == "table")
                 {
                     //TODO: Prevent this from breaking when a flag is made for the table
-                    for (int i = 0; i < field.TableFieldNames.Count; i++)
+                    for (int i = 0; i < data.TableFieldNames.Count; i++)
                     {
                         TableField tf = new TableField();
                         tf.TableID = field.ID;
-                        tf.Name = field.TableFieldNames[i];
-                        tf.Type = field.TableFieldTypes[i];
+                        tf.Name = data.TableFieldNames[i];
+                        tf.Type = data.TableFieldTypes[i];
                         tf.FormID = field.FormID;
                         tf.FormOrder = i;
                         db.TableFields.Add(tf);
@@ -134,7 +140,8 @@ namespace EZFormsPrototype.Controllers
                     }
                 }
                 //send to the parent form edit page
-                return RedirectToAction("Edit", "Form", new { id = field.FormID });
+                return RedirectToAction(data.Redirect);
+                //return RedirectToAction("Edit", "Form", new { id = field.FormID });
             }
             //go back to edit when invalid model is posted
             ViewBag.Type = DropDownListUtility.GetFieldTypeDropdown(field.Type);

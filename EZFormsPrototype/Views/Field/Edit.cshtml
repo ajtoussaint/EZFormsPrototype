@@ -100,11 +100,15 @@
             {
                 <div>@flag.Name</div>
                 <div>
-                    @Html.ActionLink("Edit", "EditFlag", new { id = flag.ID }) |
-                    @Html.ActionLink("Delete", "DeleteFlag", new { id = flag.ID })
+                    <input type="submit" value="Edit" id="EditFlag/@(flag.ID)" class="btn btn-default submitButton" /> |
+                    <input type="submit" value="Delete" id="DeleteFlag/@(flag.ID)" class="btn btn-default submitButton" />
                 </div>
             }
-            @Html.ActionLink("Add new Flag", "CreateFlag", new { id = Model.ID })
+            <input type="submit" value="Add new Flag" id="CreateFlag/@(Model.ID)" class="btn btn-default submitButton" />
+        </div>
+
+        <div>
+            <input type="hidden" name="Redirect" value="ParentForm/@(Model.FormID)" id="Redirect" />
         </div>
 
         <div class="form-group">
@@ -122,7 +126,6 @@
 @section Scripts
 {
     <script>
-        //TODO: find a better way to generate the dropdown here
         function addTableField() {
             var numColumns = parseInt($("#numColumns").val());
             numColumns++;
@@ -169,5 +172,10 @@
             $("#total").val(rowCount);
             $(this).closest('#inputRow').remove();
         });
+
+        $(".submitButton").on("click", function () {
+            $("#Redirect").val($(this).attr("id"));
+        })
+
     </script>
 }

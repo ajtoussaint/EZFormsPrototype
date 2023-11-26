@@ -250,6 +250,7 @@
     <Compile Include="Utility\FlagExpression.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\AddBlock.cs" />
+    <Compile Include="ViewModels\FieldEditViewModel.cs" />
     <Compile Include="ViewModels\FieldWithFlags.cs" />
     <Compile Include="ViewModels\FillableForm.cs" />
     <Compile Include="ViewModels\FinalResult.cs" />
