@@ -22,7 +22,20 @@ namespace EZFormsPrototype.Controllers
 
         public ActionResult Create(int id)
         {
+            //create a new flag 
+            Flag flag = new Flag();
             Field parentField = db.Fields.Find(id);
+            //TODO: make the count user specific when auth
+            flag.Name = "Flag" + db.Flags.Count();
+            flag.FieldID = parentField.ID;
+            flag.FormID = parentField.FormID;
+            flag.Level = "warning";
+            flag.appearsOnSubmit = false;
+            db.Flags.Add(flag);
+            db.SaveChanges();
+            return RedirectToAction("Edit", "Flag", new { id = flag.ID });
+
+            /*Field parentField = db.Fields.Find(id);
             if (parentField == null)
             {
                 return HttpNotFound();
@@ -33,12 +46,13 @@ namespace EZFormsPrototype.Controllers
             ViewBag.ParentFormID = parentField.FormID;
             ViewBag.Level = DropDownListUtility.GetFlagLevelDropdown("warning");
 
-            return View();
+            return View*/
         }
 
+        //Deprecated 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include ="ID,Name,Message,TriggerExpression,Level,FieldID,FormID")] Flag flag)
+        public ActionResult Create([Bind(Include ="ID,Name,Message,Level,FieldID,FormID")] Flag flag)
         {
             if(ModelState.IsValid)
             {
