@@ -231,6 +231,10 @@
     <Compile Include="Migrations\202311260614147_userIDForm.designer.cs">
       <DependentUpon>202311260614147_userIDForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202311260704517_userIDsFieldFlag.cs" />
+    <Compile Include="Migrations\202311260704517_userIDsFieldFlag.designer.cs">
+      <DependentUpon>202311260704517_userIDsFieldFlag.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\IdentityConfig.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ExpressionBlock.cs" />
@@ -417,6 +421,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202311260614147_userIDForm.resx">
       <DependentUpon>202311260614147_userIDForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202311260704517_userIDsFieldFlag.resx">
+      <DependentUpon>202311260704517_userIDsFieldFlag.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

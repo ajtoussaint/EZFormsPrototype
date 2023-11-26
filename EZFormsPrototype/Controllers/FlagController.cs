@@ -8,6 +8,7 @@ using EZFormsPrototype.Utility;
 using System.Data.Entity;
 using EZFormsPrototype.ViewModels;
 using System.Collections.ObjectModel;
+using Microsoft.AspNet.Identity;
 
 namespace EZFormsPrototype.Controllers
 {
@@ -18,7 +19,8 @@ namespace EZFormsPrototype.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            return View(db.Flags.ToList());
+            var userID = User.Identity.GetUserId();
+            return View(db.Flags.Where(f => f.userID == userID).ToList());
         }
 
         [Authorize]
@@ -43,8 +45,10 @@ namespace EZFormsPrototype.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include ="ID,Name,Message,TriggerExpression,Level,FieldID,FormID")] Flag flag)
         {
-            if(ModelState.IsValid)
+            var userID = User.Identity.GetUserId();
+            if (ModelState.IsValid)
             {
+                flag.userID = userID;
                 db.Flags.Add(flag);
                 db.SaveChanges();
                 return RedirectToAction("Edit", "Field", new { id = flag.FieldID });
@@ -55,8 +59,10 @@ namespace EZFormsPrototype.Controllers
         [Authorize]
         public ActionResult Edit(int id)
         {
+            var userID = User.Identity.GetUserId();
+
             Flag flag = db.Flags.Find(id);
-            if(flag == null)
+            if(flag == null || flag.userID != userID)
             {
                 return HttpNotFound();
             }
@@ -84,8 +90,12 @@ namespace EZFormsPrototype.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Name,Message,appearsOnSubmit,Level,FieldID,FormID,DependantFields,FlagConditions")] Flag flag)
         {
-            if (ModelState.IsValid)
+            var userID = User.Identity.GetUserId();
+            string id = db.Flags.AsNoTracking().Where(f => f.ID == flag.ID).FirstOrDefault().userID;
+
+            if (ModelState.IsValid && id == userID)
             {
+                flag.userID = userID;
                 db.Entry(flag).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Edit", "Field", new { id = flag.FieldID });
@@ -97,6 +107,15 @@ namespace EZFormsPrototype.Controllers
         [Authorize]
         public ActionResult addBlock([Bind(Include = "ID,Name,Message,TriggerExpression,Level,FieldID,FormID,Order,DependantFieldID1,DependantFieldID2,CodeExpression, ViewExpression")] AddBlock data)
         {
+            var userID = User.Identity.GetUserId();
+            string id = db.Flags.AsNoTracking().Where(f => f.ID == data.ID).FirstOrDefault().userID;
+
+            if(userID != id)
+            {
+                //this should never happen
+                return RedirectToAction("Index", "Flag");
+            }
+
             //save the flag data to the flag
             Flag flag = new Flag();
             flag.ID = data.ID;
@@ -105,6 +124,7 @@ namespace EZFormsPrototype.Controllers
             flag.Level = data.Level;
             flag.FieldID = data.FieldID;
             flag.FormID = data.FormID;
+            flag.userID = userID;
 
             db.Entry(flag).State = EntityState.Modified;
             db.SaveChanges();
@@ -141,6 +161,15 @@ namespace EZFormsPrototype.Controllers
         [Authorize]
         public ActionResult RemoveBlock([Bind(Include = "ID,Name,Message,TriggerExpression,Level,FieldID,FormID,BlockToRemove")] RemoveBlock data)
         {
+            var userID = User.Identity.GetUserId();
+            string id = db.Flags.AsNoTracking().Where(f => f.ID == data.ID).FirstOrDefault().userID;
+
+            if (userID != id)
+            {
+                //this should never happen
+                return RedirectToAction("Index", "Flag");
+            }
+
             //save the flag data to the flag
             Flag flag = new Flag();
             flag.ID = data.ID;
@@ -149,6 +178,7 @@ namespace EZFormsPrototype.Controllers
             flag.Level = data.Level;
             flag.FieldID = data.FieldID;
             flag.FormID = data.FormID;
+            flag.userID = userID;
 
             db.Entry(flag).State = EntityState.Modified;
             db.SaveChanges();
@@ -162,8 +192,9 @@ namespace EZFormsPrototype.Controllers
         [Authorize]
         public ActionResult Delete(int id)
         {
+            var userID = User.Identity.GetUserId();
             Flag flag = db.Flags.Find(id);
-            if(flag == null)
+            if(flag == null || flag.userID != userID)
             {
                 return HttpNotFound();
             }
@@ -175,7 +206,12 @@ namespace EZFormsPrototype.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            var userID = User.Identity.GetUserId();
             Flag flag = db.Flags.Find(id);
+            if(flag == null || flag.userID != userID)
+            {
+                return RedirectToAction("Edit", "Field", new { id = flag.FieldID });
+            }
             db.Flags.Remove(flag);
             db.SaveChanges();
             return RedirectToAction("Edit", "Field", new { id = flag.FieldID });

@@ -17,6 +17,7 @@ namespace EZFormsPrototype.Models
         public string Level { get; set; }
         public int FieldID { get; set; }
         public int FormID { get; set; }
+        public string userID { get; set; }
         public bool appearsOnSubmit { get; set; }
         public virtual List<int> DependantFieldIDs { get; set; }
         public virtual List<string> CodeExpressions { get; set; }

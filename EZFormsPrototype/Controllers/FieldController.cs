@@ -107,10 +107,11 @@ namespace EZFormsPrototype.Controllers
         public ActionResult Edit([Bind(Include = "ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes")] FormField field)
         {
             var userID = User.Identity.GetUserId();
-            string id = db.Fields.Where(f => f.ID == field.ID).FirstOrDefault().userID;
+            string id = db.Fields.AsNoTracking().Where(f => f.ID == field.ID).FirstOrDefault().userID;
 
             if (ModelState.IsValid && userID == id)
             {
+                field.userID = userID;
                 db.Entry(field).State = EntityState.Modified;
                 db.SaveChanges();
                 //Drop any TableFields associated with this FormField

@@ -8,7 +8,7 @@
 
 <h2>Edit</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Flag", FormMethod.Post, htmlAttributes: new {id = "FlagForm"}))
 {
     @Html.AntiForgeryToken()
     
@@ -234,9 +234,9 @@
             html += '</div>'
 
             $("#expressionSpace").append(html);
-            var action = $("form").attr("action");
+            var action = $("#FlagForm").attr("action");
             action = action.replace(/Flag\/[\w]+\//, "Flag/AddBlock/");
-            $("form").attr("action", action);
+            $("#FlagForm").attr("action", action);
         })
 
         $(document).on('click', '#removeBlock', function () {
@@ -244,9 +244,9 @@
             var html = '';
             html += '<input type="hidden" name="BlockToRemove" value="' + id + '" />'
             $("#expressionSpace").append(html);
-            var action = $("form").attr("action");
+            var action = $("#FlagForm").attr("action");
             action = action.replace(/Flag\/[\w]+\//, "Flag/RemoveBlock/");
-            $("form").attr("action", action);
+            $("#FlagForm").attr("action", action);
         });
 
         $("#orConjunction").click(function () {
@@ -285,17 +285,17 @@
 
         function updateBlockComparisonList(type) {
             if (!type) {
-                alert("no type was given so the default was used");
+                //alert("no type was given so the default was used");
                 type = $("#blockField").find("option").attr("type")
             }
             if (type == 'table') {
                 type = $("#tableFieldColumn").find(":selected").attr("type");
                 if (!type) {
-                    alert("default table");
+                    //alert("default table");
                     type = $("#tableFieldColumn").find("option").attr("type")
                 }
             }
-            alert("update Type: " + type);
+            //alert("update Type: " + type);
             var html = '';
             switch (type) {
                 case "text":
@@ -303,7 +303,7 @@
                     break;
 
                 case "number":
-                    html += '<option value="_gt">></option><option value="_lt"><</option><option value="_gte">>=</option><option value="_lte"><=</option><option value="_equals">=</option>'
+                    html += '<option value="_gt">></option><option value="_lt"><</option><option value="_gte">>=</option><option value="_lte"><=</option>'
                     break;
             }
             html += '<option value="_equals">=</option><option value="_notEquals">does not equal</option><option value="_isEmpty">is empty</option>';
@@ -357,18 +357,18 @@
             var code = $(element).val();
             var view = $(element).text();
             var html = '';
-            html += '<div class=expressionBlock>'
+            html += '<div class=expressionBlock>';
             html += '<input type="hidden" name="CodeExpression" value="' + code + ' " />';
             html += '<input type="hidden" name="ViewExpression" value="' + view + ' " />';
-            html += '</div>'
+            html += '</div>';
             $("#expressionSpace").append(html);
-            var action = $("form").attr("action");
+            var action = $("#FlagForm").attr("action");
             action = action.replace(/Flag\/[\w]+\//, "Flag/AddBlock/");
-            $("form").attr("action", action);
+            $("#FlagForm").attr("action", action);
         }
 
         $("#blockField").change(function () {
-            alert("bfchange");
+            //alert("bfchange");
             var table = $(this).find(":selected")
             if (table.attr("type") == "table") {
                 toggleTableControlls(parseInt(table.val().match(/\d+/)[0]))
@@ -379,7 +379,7 @@
         })
 
         $("#tableFieldColumn").on("change", function () {
-            alert("tf change");
+            //alert("tf change");
             updateBlockComparisonList("table");
         })
 
