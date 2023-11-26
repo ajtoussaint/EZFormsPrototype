@@ -24,17 +24,22 @@ namespace EZFormsPrototype.Controllers
             {
                 return HttpNotFound();
             }
+
             ViewBag.ParentID = parentForm.ID;
             ViewBag.ParentTitle = parentForm.Title;
+
             //Create a list of possible field types to pass to the type input dropdown
+            //TODO: move this to the view so I don't have to repeat in post action OR just redirect a bad post to GET
             ViewBag.Type = DropDownListUtility.GetFieldTypeDropdown("number");
+
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include ="ID,FormID,Name,Type,TableFieldNames,TableFieldTypes")] FormField field)
+        public ActionResult Create([Bind(Include ="ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes")] FormField field)
         {
+            
             if(ModelState.IsValid)
             {
                 db.FormFields.Add(field);
@@ -50,6 +55,7 @@ namespace EZFormsPrototype.Controllers
                         tf.Name = field.TableFieldNames[i];
                         tf.Type = field.TableFieldTypes[i];
                         tf.FormID = field.FormID;
+                        tf.FormOrder = i;
                         db.TableFields.Add(tf);
                         db.SaveChanges();
                     }
@@ -110,6 +116,7 @@ namespace EZFormsPrototype.Controllers
                         tf.Name = field.TableFieldNames[i];
                         tf.Type = field.TableFieldTypes[i];
                         tf.FormID = field.FormID;
+                        tf.FormOrder = i;
                         db.TableFields.Add(tf);
                         db.SaveChanges();
                     }

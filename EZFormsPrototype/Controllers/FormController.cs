@@ -72,7 +72,7 @@ namespace EZFormsPrototype.Controllers
             {
                 return HttpNotFound();
             }
-            form.Fields = db.FormFields.Where(f => f.FormID == id).ToList();
+            form.Fields = db.FormFields.Where(f => f.FormID == id).OrderBy(f => f.FormOrder).ToList();
             return View(form);
         }
 
