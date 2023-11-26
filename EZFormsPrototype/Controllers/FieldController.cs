@@ -42,7 +42,7 @@ namespace EZFormsPrototype.Controllers
                 //Check if the user is creating a table and make subfields if they are
                 if (field.Type == "table")
                 {
-                    for(int i = 0; i < field.TableFieldNames.Count; i++)
+                    for(int i = 0; i<field.TableFieldNames.Count; i++)
                     {
                         //TODO: subfields get messed up by validation
                         TableField tf = new TableField();
@@ -90,7 +90,7 @@ namespace EZFormsPrototype.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,FormID,Name,Type,TableFieldNames,TableFieldTypes")] FormField field)
+        public ActionResult Edit([Bind(Include = "ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes")] FormField field)
         {
             if(ModelState.IsValid)
             {
