@@ -99,7 +99,7 @@ namespace EZFormsPrototype.Controllers
             var userID = User.Identity.GetUserId();
             string id =  db.Forms.Find(form.ID).userID;
 
-            if (ModelState.IsValid && userID == id)
+            if (ModelState.IsValid)
             {
                 db.Entry(form).State = EntityState.Modified;
                 db.SaveChanges();
