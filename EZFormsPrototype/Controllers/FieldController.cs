@@ -29,7 +29,6 @@ namespace EZFormsPrototype.Controllers
             ViewBag.ParentTitle = parentForm.Title;
 
             //Create a list of possible field types to pass to the type input dropdown
-            //TODO: move this to the view so I don't have to repeat in post action OR just redirect a bad post to GET
             ViewBag.Type = DropDownListUtility.GetFieldTypeDropdown("number");
 
             return View();

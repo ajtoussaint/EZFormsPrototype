@@ -17,6 +17,7 @@ namespace EZFormsPrototype.Controllers
         private EZFormsPrototype.DAL.FormContext db = new EZFormsPrototype.DAL.FormContext();
 
         // GET: Form
+        [Authorize]
         public ActionResult Index()
         {
             return View(db.Forms.ToList());

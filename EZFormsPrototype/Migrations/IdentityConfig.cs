@@ -5,14 +5,14 @@
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<EZFormsPrototype.DAL.FormContext>
+    internal sealed class IdentityConfig : DbMigrationsConfiguration<EZFormsPrototype.Models.ApplicationDbContext>
     {
-        public Configuration()
+        public IdentityConfig()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(EZFormsPrototype.DAL.FormContext context)
+        protected override void Seed(EZFormsPrototype.Models.ApplicationDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 
