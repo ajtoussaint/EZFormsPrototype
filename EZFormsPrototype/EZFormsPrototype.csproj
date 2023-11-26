@@ -227,8 +227,12 @@
     <Compile Include="Migrations\202311260334511_revert.designer.cs">
       <DependentUpon>202311260334511_revert.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202311260614147_userIDForm.cs" />
+    <Compile Include="Migrations\202311260614147_userIDForm.designer.cs">
+      <DependentUpon>202311260614147_userIDForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\IdentityConfig.cs" />
-    <Compile Include="Migrations\FormConfiguration.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ExpressionBlock.cs" />
     <Compile Include="Models\Field.cs" />
     <Compile Include="Models\Flag.cs" />
@@ -410,6 +414,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202311260334511_revert.resx">
       <DependentUpon>202311260334511_revert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202311260614147_userIDForm.resx">
+      <DependentUpon>202311260614147_userIDForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

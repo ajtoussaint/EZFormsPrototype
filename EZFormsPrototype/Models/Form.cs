@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Ajax.Utilities;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,6 +12,7 @@ namespace EZFormsPrototype.Models
         [RegularExpression("[a-zA-Z0-9-]+")]
         public string Title { get; set; }
         public string Description { get; set; }
+        public string userID { get; set; }
         public virtual ICollection<FormField> Fields { get; set; }
 
     }

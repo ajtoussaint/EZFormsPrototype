@@ -5,9 +5,9 @@
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class FormConfiguration : DbMigrationsConfiguration<EZFormsPrototype.DAL.FormContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<EZFormsPrototype.DAL.FormContext>
     {
-        public FormConfiguration()
+        public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }

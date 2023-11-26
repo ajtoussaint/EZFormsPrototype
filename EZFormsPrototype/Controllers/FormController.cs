@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using EZFormsPrototype.DAL;
 using EZFormsPrototype.Models;
 using EZFormsPrototype.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace EZFormsPrototype.Controllers
 {
@@ -20,19 +21,21 @@ namespace EZFormsPrototype.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            return View(db.Forms.ToList());
+            var userID = User.Identity.GetUserId();
+            return View(db.Forms.Where(f => f.userID == userID).ToList());
         }
 
         // GET: Form/Details/5
         [Authorize]
         public ActionResult Details(int? id)
         {
+            var userID = User.Identity.GetUserId();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Form form = db.Forms.Find(id);
-            if (form == null)
+            if (form == null || form.userID != userID)
             {
                 return HttpNotFound();
             }
@@ -56,6 +59,8 @@ namespace EZFormsPrototype.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = User.Identity.GetUserId();
+                form.userID = userId;
                 db.Forms.Add(form);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -68,12 +73,14 @@ namespace EZFormsPrototype.Controllers
         [Authorize]
         public ActionResult Edit(int? id)
         {
+            var userID = User.Identity.GetUserId();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Form form = db.Forms.Find(id);
-            if (form == null)
+            if (form == null || form.userID != userID)
             {
                 return HttpNotFound();
             }
@@ -89,7 +96,10 @@ namespace EZFormsPrototype.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Title,Description")] Form form)
         {
-            if (ModelState.IsValid)
+            var userID = User.Identity.GetUserId();
+            string id =  db.Forms.Find(form.ID).userID;
+
+            if (ModelState.IsValid && userID == id)
             {
                 db.Entry(form).State = EntityState.Modified;
                 db.SaveChanges();
@@ -102,12 +112,14 @@ namespace EZFormsPrototype.Controllers
         [Authorize]
         public ActionResult Delete(int? id)
         {
+            var userID = User.Identity.GetUserId();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Form form = db.Forms.Find(id);
-            if (form == null)
+            if (form == null || form.userID != userID)
             {
                 return HttpNotFound();
             }
@@ -120,9 +132,14 @@ namespace EZFormsPrototype.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            var userID = User.Identity.GetUserId();
+
             Form form = db.Forms.Find(id);
-            db.Forms.Remove(form);
-            db.SaveChanges();
+            if(form.userID == userID)
+            {
+                db.Forms.Remove(form);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 
