@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using EZFormsPrototype.DAL;
 using EZFormsPrototype.Models;
 using EZFormsPrototype.ViewModels;
 using Microsoft.AspNet.Identity;
@@ -97,10 +94,12 @@ namespace EZFormsPrototype.Controllers
         public ActionResult Edit([Bind(Include = "ID,Title,Description")] Form form)
         {
             var userID = User.Identity.GetUserId();
-            string id =  db.Forms.Find(form.ID).userID;
+            //as no tracking allows the modified state to work
+            string id =  db.Forms.AsNoTracking().Where(f => f.ID == form.ID).FirstOrDefault().userID;
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && userID == id)
             {
+                form.userID = userID;
                 db.Entry(form).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

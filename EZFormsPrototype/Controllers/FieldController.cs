@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using EZFormsPrototype.DAL;
 using EZFormsPrototype.Models;
 using EZFormsPrototype.Utility;
+using Microsoft.AspNet.Identity;
 
 namespace EZFormsPrototype.Controllers
 {
@@ -40,9 +41,11 @@ namespace EZFormsPrototype.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include ="ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes")] FormField field)
         {
-            
-            if(ModelState.IsValid)
+            var userId = User.Identity.GetUserId();
+
+            if (ModelState.IsValid)
             {
+                field.userID = userId;
                 db.FormFields.Add(field);
                 db.SaveChanges();
                 //Check if the user is creating a table and make subfields if they are
@@ -78,12 +81,14 @@ namespace EZFormsPrototype.Controllers
         [Authorize]
         public ActionResult Edit(int? id) 
         {
-            if(id == null)
+            var userID = User.Identity.GetUserId();
+
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             FormField field = db.FormFields.Find(id);
-            if(field == null)
+            if(field == null || field.userID != userID)
             {
                 return HttpNotFound();
             }
@@ -101,7 +106,10 @@ namespace EZFormsPrototype.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes")] FormField field)
         {
-            if(ModelState.IsValid)
+            var userID = User.Identity.GetUserId();
+            string id = db.Fields.Where(f => f.ID == field.ID).FirstOrDefault().userID;
+
+            if (ModelState.IsValid && userID == id)
             {
                 db.Entry(field).State = EntityState.Modified;
                 db.SaveChanges();
@@ -135,12 +143,13 @@ namespace EZFormsPrototype.Controllers
         [Authorize]
         public ActionResult Delete(int? id)
         {
+            var userID = User.Identity.GetUserId(); 
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             FormField field = db.FormFields.Find(id);
-            if (field == null)
+            if (field == null || field.userID != userID)
             {
                 return HttpNotFound();
             }
@@ -154,17 +163,21 @@ namespace EZFormsPrototype.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            var userID = User.Identity.GetUserId();
             FormField field = db.FormFields.Find(id);
-            if (field.Type == "table")
+            if(field.userID == userID)
             {
-                //Drop any TableFields and Flags associated with this FormField
-                List<TableField> tfList = db.TableFields.Where(tf => tf.TableID == field.ID).ToList();
-                List<Flag> fList = db.Flags.Where(f => f.FieldID == field.ID).ToList();
-                db.TableFields.RemoveRange(tfList);
-                db.Flags.RemoveRange(fList);
+                if (field.Type == "table")
+                {
+                    //Drop any TableFields and Flags associated with this FormField
+                    List<TableField> tfList = db.TableFields.Where(tf => tf.TableID == field.ID).ToList();
+                    List<Flag> fList = db.Flags.Where(f => f.FieldID == field.ID).ToList();
+                    db.TableFields.RemoveRange(tfList);
+                    db.Flags.RemoveRange(fList);
+                }
+                db.Fields.Remove(field);
+                db.SaveChanges();
             }
-            db.Fields.Remove(field);
-            db.SaveChanges();
             return RedirectToAction("Edit", "Form", new { id = field.FormID });
         }
 
