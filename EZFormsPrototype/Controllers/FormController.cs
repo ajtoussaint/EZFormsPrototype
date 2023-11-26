@@ -91,9 +91,15 @@ namespace EZFormsPrototype.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,Description")] Form form)
+        public ActionResult Edit([Bind(Include = "ID,Title,Description,Redirect")] FormEditViewModel data)
         {
             var userID = User.Identity.GetUserId();
+
+            Form form = new Form();
+            form.ID = data.ID;
+            form.Title = data.Title;
+            form.Description = data.Description;
+
             //as no tracking allows the modified state to work
             string id =  db.Forms.AsNoTracking().Where(f => f.ID == form.ID).FirstOrDefault().userID;
 
@@ -102,7 +108,7 @@ namespace EZFormsPrototype.Controllers
                 form.userID = userID;
                 db.Entry(form).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction(data.Redirect);
             }
             return View(form);
         }

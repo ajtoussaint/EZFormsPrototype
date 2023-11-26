@@ -37,16 +37,20 @@
         <h2>@Html.DisplayFor(Modelitem => field.Name)</h2>
         <p>@Html.DisplayFor(Modelitem => field.Type)</p>
         <p>
-            @Html.ActionLink("Edit", "EditField", new { id = field.ID })
+            <input type="submit" id="EditField/@(field.ID)" value="Edit" class="btn btn-default submitButton" />
             |
-            @Html.ActionLink("Delete", "DeleteField", new { id = field.ID })
+            <input type="submit" id="DeleteField/@(field.ID)" value="Delete" class="btn btn-default submitButton" />
         </p>
         
         
     }
 
     <div>
-        @Html.ActionLink("Add new field", "CreateField", new { id = Model.ID })
+        <input type="submit" id="CreateField/@(Model.ID)" value="Create" class="btn btn-default submitButton" />
+    </div>
+
+    <div>
+        <input type="hidden" name="Redirect" value="Index" id="Redirect"/>
     </div>
 
     <div class="form-group">
@@ -63,4 +67,10 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(".submitButton").on("click", function () {
+            $("#Redirect").val($(this).attr("id"));
+        })
+    </script>
+    
 }

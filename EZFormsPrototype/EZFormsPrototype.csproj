@@ -253,6 +253,7 @@
     <Compile Include="ViewModels\FieldWithFlags.cs" />
     <Compile Include="ViewModels\FillableForm.cs" />
     <Compile Include="ViewModels\FinalResult.cs" />
+    <Compile Include="ViewModels\FormEditViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="ViewModels\RemoveBlock.cs" />
   </ItemGroup>
