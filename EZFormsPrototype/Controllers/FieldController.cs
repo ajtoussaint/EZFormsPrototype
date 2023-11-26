@@ -17,6 +17,7 @@ namespace EZFormsPrototype.Controllers
         private EZFormsPrototype.DAL.FormContext db = new EZFormsPrototype.DAL.FormContext();
 
         // GET: Field
+        [Authorize]
         public ActionResult Create(int id)
         {
             Form parentForm = db.Forms.Find(id);
@@ -35,6 +36,7 @@ namespace EZFormsPrototype.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include ="ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes")] FormField field)
         {
@@ -73,6 +75,7 @@ namespace EZFormsPrototype.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult Edit(int? id) 
         {
             if(id == null)
@@ -94,6 +97,7 @@ namespace EZFormsPrototype.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,FormID,Name,Type,FormOrder,TableFieldNames,TableFieldTypes")] FormField field)
         {
@@ -128,6 +132,7 @@ namespace EZFormsPrototype.Controllers
             return View(field);
         }
 
+        [Authorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -145,6 +150,7 @@ namespace EZFormsPrototype.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
@@ -162,21 +168,25 @@ namespace EZFormsPrototype.Controllers
             return RedirectToAction("Edit", "Form", new { id = field.FormID });
         }
 
+        [Authorize]
         public ActionResult CreateFlag(int id)
         {
             return RedirectToAction("Create", "Flag", new { id = id });
         }
 
+        [Authorize]
         public ActionResult EditFlag(int id)
         {
             return RedirectToAction("Edit", "Flag", new { id = id });
         }
 
+        [Authorize]
         public ActionResult DeleteFlag(int id)
         {
             return RedirectToAction("Delete", "Flag", new { id = id });
         }
 
+        [Authorize]
         public ActionResult ParentForm(int id)
         {
             return RedirectToAction("Edit", "Form", new { id = id });

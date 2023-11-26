@@ -10,18 +10,13 @@ namespace EZFormsPrototype.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Form");
         }
 
         public ActionResult About()
         {
             ViewBag.Message = "What is EZ Forms?";
 
-            return View();
-        }
-
-        public ActionResult Laboratory()
-        {
             return View();
         }
     }

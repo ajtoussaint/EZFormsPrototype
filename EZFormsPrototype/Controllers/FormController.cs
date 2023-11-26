@@ -24,6 +24,7 @@ namespace EZFormsPrototype.Controllers
         }
 
         // GET: Form/Details/5
+        [Authorize]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -39,6 +40,7 @@ namespace EZFormsPrototype.Controllers
         }
 
         // GET: Form/Create
+        [Authorize]
         public ActionResult Create()
         {
             return View();
@@ -48,6 +50,7 @@ namespace EZFormsPrototype.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Title,Description")] Form form)
         {
@@ -62,6 +65,7 @@ namespace EZFormsPrototype.Controllers
         }
 
         // GET: Form/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -81,6 +85,7 @@ namespace EZFormsPrototype.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Title,Description")] Form form)
         {
@@ -94,6 +99,7 @@ namespace EZFormsPrototype.Controllers
         }
 
         // GET: Form/Delete/5
+        [Authorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -110,6 +116,7 @@ namespace EZFormsPrototype.Controllers
 
         // POST: Form/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
@@ -119,6 +126,7 @@ namespace EZFormsPrototype.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         public ActionResult Fillable(int id)
         {
             FillableForm ViewModel = new FillableForm();
@@ -152,6 +160,7 @@ namespace EZFormsPrototype.Controllers
             return View(ViewModel);
         }
 
+        [Authorize]
         public ActionResult FinalResult(FormCollection form)
         {
             FinalResult res = new FinalResult();
@@ -165,16 +174,19 @@ namespace EZFormsPrototype.Controllers
             return View(res);
         }
 
+        [Authorize]
         public ActionResult CreateField(int id)
         {
             return RedirectToAction("Create", "Field", new { id = id });
         }
 
+        [Authorize]
         public ActionResult EditField(int id)
         {
             return RedirectToAction("Edit", "Field", new { id = id });
         }
 
+        [Authorize]
         public ActionResult DeleteField(int id)
         {
             return RedirectToAction("Delete", "Field", new { id = id });

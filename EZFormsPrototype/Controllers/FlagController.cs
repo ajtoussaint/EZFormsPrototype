@@ -15,11 +15,13 @@ namespace EZFormsPrototype.Controllers
     {
         private EZFormsPrototype.DAL.FormContext db = new EZFormsPrototype.DAL.FormContext();
         // GET: Flag
+        [Authorize]
         public ActionResult Index()
         {
             return View(db.Flags.ToList());
         }
 
+        [Authorize]
         public ActionResult Create(int id)
         {
             Field parentField = db.Fields.Find(id);
@@ -37,6 +39,7 @@ namespace EZFormsPrototype.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include ="ID,Name,Message,TriggerExpression,Level,FieldID,FormID")] Flag flag)
         {
@@ -49,6 +52,7 @@ namespace EZFormsPrototype.Controllers
             return RedirectToAction("Create", new { id = flag.FieldID });
         }
 
+        [Authorize]
         public ActionResult Edit(int id)
         {
             Flag flag = db.Flags.Find(id);
@@ -76,6 +80,7 @@ namespace EZFormsPrototype.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Name,Message,appearsOnSubmit,Level,FieldID,FormID,DependantFields,FlagConditions")] Flag flag)
         {
@@ -89,6 +94,7 @@ namespace EZFormsPrototype.Controllers
             return View(flag);
         }
 
+        [Authorize]
         public ActionResult addBlock([Bind(Include = "ID,Name,Message,TriggerExpression,Level,FieldID,FormID,Order,DependantFieldID1,DependantFieldID2,CodeExpression, ViewExpression")] AddBlock data)
         {
             //save the flag data to the flag
@@ -132,6 +138,7 @@ namespace EZFormsPrototype.Controllers
             return RedirectToAction("Edit", "Flag", new { id = data.ID });
         }
 
+        [Authorize]
         public ActionResult RemoveBlock([Bind(Include = "ID,Name,Message,TriggerExpression,Level,FieldID,FormID,BlockToRemove")] RemoveBlock data)
         {
             //save the flag data to the flag
@@ -152,6 +159,7 @@ namespace EZFormsPrototype.Controllers
             return RedirectToAction("Edit", "Flag", new { id = data.ID });
         }
 
+        [Authorize]
         public ActionResult Delete(int id)
         {
             Flag flag = db.Flags.Find(id);
@@ -163,6 +171,7 @@ namespace EZFormsPrototype.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
@@ -172,6 +181,7 @@ namespace EZFormsPrototype.Controllers
             return RedirectToAction("Edit", "Field", new { id = flag.FieldID });
         }
 
+        [Authorize]
         public ActionResult ParentField(int id)
         {
             return RedirectToAction("Edit", "Field", new {id = id});
