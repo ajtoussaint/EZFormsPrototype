@@ -120,6 +120,7 @@ namespace EZFormsPrototype.Controllers
                 field.userID = userID;
                 db.Entry(field).State = EntityState.Modified;
                 db.SaveChanges();
+                //TODO: This is terrible
                 //Drop any TableFields associated with this FormField
                 List<TableField> tfList = db.TableFields.Where(tf => tf.TableID == field.ID).ToList();
                 db.TableFields.RemoveRange(tfList);

@@ -11,9 +11,7 @@
 <h2>@Model.Form.Title</h2>
 <p>@Model.Form.Description</p>
 
-<form action="/Form/FinalResult" method="post" id="fillableForm">
-    @Html.HiddenFor(ModelItem => Model.Form.Title)
-    @Html.HiddenFor(ModelItem => Model.Form.Description)
+<form action="/Form/FinalResult/@(Model.Form.ID)" method="post" id="fillableForm">
     @foreach (FormField field in Model.Fields)
     {
         <div>
@@ -21,7 +19,7 @@
             @if (field.Type != "table")
             {
                 <text>
-                    @if (field.Type == "dollarAmount"){<text>$</text>}<input type=@(field.Type) name=@(field.Name) id=@("Field" + field.ID) />
+                    @if (field.Type == "dollarAmount"){<text>$</text>}<input type=@(field.Type) name=@(field.ID) id=@("Field" + field.ID) />
                 </text>
             }
             else
@@ -42,7 +40,7 @@
                     {
                         <text>
                             <td>
-                               <input type="@(tf.Type)" name="@(tf.Name)" class="@("Field" + tf.ID)" />
+                               <input type="@(tf.Type)" name="@(tf.ID)" class="@("Field" + tf.ID)" />
                             </td>
                         </text>
                     }
@@ -57,13 +55,14 @@
 
             @foreach (Flag flag in Model.Flags)
             {
-                //TODO: might be better to bundle these on the controller similar to how the Expression Blocks work
                 if (flag.FieldID == field.ID)
                 {
                     <div id=@("Flag" + flag.ID) class="d-none">
-                        <h4>@flag.Name</h4>
-                        <p>@flag.Message</p>
-                        <input type="text" name=@("flagResponse"+flag.ID) id="flagResponse" />
+                        <div class="@flag.Level" style="background:@(flag.Level == "warning" ? "orange" : "indianred"); padding:0.4em; border:solid; border-radius:5px; margin-top:1em;">
+                            <h4>@flag.Name</h4>
+                            <p>@flag.Message</p>
+                            <input type="text" name=@(flag.ID) id="flagResponse" />
+                        </div>
                     </div>
                 }
             }
@@ -82,7 +81,7 @@
 {
     <script>
         //define comparison functions
-
+        let devMode = false;
         function _gt(f1, f2) {
             return parseInt(f1) > parseInt(f2);
         }
@@ -180,7 +179,8 @@
                 <text>
                 //runs every time the field is updated
                 $("@("#Field" + field.ID)").change(function () {
-                    alert("@("a change has been made to field: " + field.Name)");
+                    if(devMode)
+                        alert("@("a change has been made to field: " + field.Name)");
                     //run the flag function for each flag that has a depdnecy on this field and is checked at data entry
                     @foreach (int flagID in field.DependentFlagIDs)
                     {
@@ -199,7 +199,8 @@
     {
         <text>
             function updateField@(tf.ID)() {
-                alert("a change has been made to a table field: @(tf.Name)");
+                if(devMode)
+                    alert("a change has been made to a table field: @(tf.Name)");
                 @foreach(int flagID in tf.DependentFlagIDs)
                 {
                     <text>
@@ -279,7 +280,7 @@
            foreach(TableField tf in field.TableFields)
             {
                <text>
-                     html += "<td><input type=\"@(tf.Type)\" name=\"@(tf.Name)\" class=\"@("Field" + tf.ID)\" </td>";
+                     html += "<td><input type=\"@(tf.Type)\" name=\"@(tf.ID)\" class=\"@("Field" + tf.ID)\" </td>";
                     tableFields["_@(field.ID)_"].push(updateField@(tf.ID));
                 </text>
             }
@@ -303,5 +304,6 @@
 
     </script>
 }
+
 
 

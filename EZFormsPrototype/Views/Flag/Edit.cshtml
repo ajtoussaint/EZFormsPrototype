@@ -273,7 +273,7 @@
 
         $().ready(function () {
             toggleCustomInput();
-            updateBlockComparisonList($("#blockField").find(":selected").attr("type"));
+            blockFieldChange();
         })
 
         $("#blockField2").change(function () {
@@ -299,7 +299,7 @@
             var html = '';
             switch (type) {
                 case "text":
-                    html += '<option value="_like">matches the pattern:</option>< option value = "_contains" > contains the text:</option ><option value="_notLike">does not match the pattern:</option><option value="_doesNotContain">does not contain the text:</option>';
+                    html += '<option value="_like">matches the pattern:</option> <option value="_contains">contains the text:</option><option value="_notLike">does not match the pattern:</option><option value="_doesNotContain">does not contain the text:</option>';
                     break;
 
                 case "number":
@@ -367,19 +367,19 @@
             $("#FlagForm").attr("action", action);
         }
 
-        $("#blockField").change(function () {
-            //alert("bfchange");
-            var table = $(this).find(":selected")
+        $("#blockField").change(blockFieldChange);
+
+        function blockFieldChange() {
+            var table = $("#blockField").find(":selected")
             if (table.attr("type") == "table") {
                 toggleTableControlls(parseInt(table.val().match(/\d+/)[0]))
             } else {
                 toggleTableControlls(-1);
             }
-            updateBlockComparisonList($(this).find(":selected").attr("type"));
-        })
+            updateBlockComparisonList($("#blockField").find(":selected").attr("type"));
+        }
 
         $("#tableFieldColumn").on("change", function () {
-            //alert("tf change");
             updateBlockComparisonList("table");
         })
 
@@ -430,7 +430,9 @@
                 tableIn.attr("class", "d-none");
                 //depopulate
                 $("#tableField").empty();
-                $("#compType").prepend('<option value="_single" selected="selected" id="singleOption">Single</option>');
+                var x = $("#singleOption").length;
+                if(!x)
+                    $("#compType").prepend('<option value="_single" selected="selected" id="singleOption">Single</option>');
             }
         }
 

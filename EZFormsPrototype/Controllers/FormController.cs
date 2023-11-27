@@ -183,17 +183,66 @@ namespace EZFormsPrototype.Controllers
         }
 
         [Authorize]
-        public ActionResult FinalResult(FormCollection form)
+        public ActionResult FinalResult(FormCollection form, int id)
         {
-            FinalResult res = new FinalResult();
-            foreach(string key in form.AllKeys)
+            Form originalForm = db.Forms.Find(id);
+
+            FinalResult fres = new FinalResult();
+
+            fres.FormTitle = originalForm.Title;
+            fres.FormDescription = originalForm.Description;
+
+            //get all the fields and flags associated with this form ID
+            List<FormField> fields = db.FormFields.Where(f => f.FormID == id).ToList();
+
+            List<Flag> flags = db.Flags.Where(f => f.FormID == id).ToList();
+
+            foreach(FormField field in fields)
             {
-                if (form[key] != "")
-                    res.addResult(key, form[key]);
+                if(field.Type == "table")
+                {
+                    TableResult res = new TableResult();
+                    res.FlagResults = new List<FlagResult> { };
+                    res.Title = field.Name;
+                    //get list of table fields
+                    List<TableField> tableFields = db.TableFields.Where(tf => tf.TableID == field.ID).ToList();
+                    res.TableFields = tableFields.Select(tf => tf.Name).ToList();
+                    res.FieldValues = new List<List<string>>();
+                    //for each table field id
+                    foreach (TableField tf in tableFields)
+                    {
+                        var x = form[tf.ID.ToString()];
+                        var y = form[tf.ID.ToString()].Split(',');
+                        var z = form[tf.ID.ToString()].Split(',').ToList();
+                        List<string> tfres = form[tf.ID.ToString()].Split(',').ToList();
+                        res.FieldValues.Add(tfres);
+                    }
+                    foreach (Flag flag in flags.Where(f => f.FieldID == field.ID))
+                    {
+                        FlagResult flagres = new FlagResult();
+                        flagres.FlagTitle = flag.Name;
+                        flagres.FlagResponse = form[flag.ID.ToString()];
+                        res.FlagResults.Add(flagres);
+                    }
+                    fres.addResult(res);
+                }
+                else
+                {
+                    Result res = new Result();
+                    res.FlagResults = new List<FlagResult> { };
+                    res.Title = field.Name;
+                    res.Value = form[field.ID.ToString()];
+                    foreach (Flag flag in flags.Where(f => f.FieldID == field.ID))
+                    {
+                        FlagResult flagres = new FlagResult();
+                        flagres.FlagTitle = flag.Name;
+                        flagres.FlagResponse = form[flag.ID.ToString()];
+                        res.FlagResults.Add(flagres);
+                    }
+                    fres.addResult(res);
+                }
             }
-            res.FormTitle = form["Form.Title"];
-            res.FormDescription = form["Form.Description"];
-            return View(res);
+            return View(fres);
         }
 
         [Authorize]

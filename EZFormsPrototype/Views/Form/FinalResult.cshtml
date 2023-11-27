@@ -5,12 +5,54 @@
     ViewBag.Title = "FinalResult";
 }
 
-<h2>FinalResult:</h2>
+<h2>Form Submission:</h2>
 
-<h1>@Model.FormTitle</h1>
+<h1 class="align-self-sm-center">@Model.FormTitle</h1>
 <p>@Model.FormDescription</p>
-@foreach (Result result in Model.Results)
-{
-    <h3>@Html.DisplayFor(ModelItem => result.Title)</h3>
-    <p>@Html.DisplayFor(ModelItem => result.Value)</p>
-}
+
+    @foreach (Result result in Model.Results)
+    {
+        <div class="fieldResult">
+        @if (result is TableResult)
+        {
+            TableResult res = (TableResult)result;
+            <h2>@res.Title</h2>
+            <table>
+                <tr>
+                    @foreach (string tf in res.TableFields)
+                    {
+                        <th>@tf</th>
+                    }
+                </tr>
+                @for (int i = 0; i < res.FieldValues[0].Count; i++)
+                {
+                    <tr>
+                        @foreach (List<string> col in res.FieldValues)
+                        {
+                            <td>@col[i]</td>
+                        }
+                    </tr>
+                }
+            </table>
+            <div class="flagResult">
+                @foreach (FlagResult fr in res.FlagResults)
+                {
+                    <h4>@(fr.FlagTitle) was triggered.</h4>
+                    <p>User Responded: @fr.FlagResponse</p>
+                }
+            </div>
+        }
+        else
+        {
+        <h3>@result.Title: @result.Value</h3>
+
+            <div class="flagResult">
+                @foreach (FlagResult fr in result.FlagResults)
+                {
+                    <h6>@(fr.FlagTitle) was triggered.</h6>
+                    <p>User Responded: @fr.FlagResponse</p>
+                }
+            </div>
+        }
+        </div>
+    }
