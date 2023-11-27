@@ -120,15 +120,35 @@ namespace EZFormsPrototype.Controllers
                 field.userID = userID;
                 db.Entry(field).State = EntityState.Modified;
                 db.SaveChanges();
-                //TODO: This is terrible
-                //Drop any TableFields associated with this FormField
-                List<TableField> tfList = db.TableFields.Where(tf => tf.TableID == field.ID).ToList();
-                db.TableFields.RemoveRange(tfList);
+                //get table fields associated with this field
+                List<TableField> tfList = db.TableFields.Where(tf => tf.TableID == field.ID).OrderBy(tf => tf.ID).ToList();
+
                 //Add new table fields as needed
                 if (field.Type == "table")
                 {
-                    //TODO: Prevent this from breaking when a flag is made for the table
-                    for (int i = 0; i < data.TableFieldNames.Count; i++)
+                    int i = 0;
+                    while(i < tfList.Count)
+                    {
+                        //for each already existing field...
+                        //if it's values have been changed
+                        if(data.TableFieldNames.Count - 1 >= i)
+                        {
+                            TableField tf = tfList[i];
+                            tf.Name = data.TableFieldNames[i];
+                            tf.Type = data.TableFieldTypes[i];
+                            db.Entry(tf).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }else
+                        {
+                            //clean up removed fields
+                            db.TableFields.Remove(tfList[i]);
+                            db.SaveChanges();
+                        }
+                        i++;
+                    }
+
+                    //create new table fields if necessary
+                    while(i < data.TableFieldNames.Count)
                     {
                         TableField tf = new TableField();
                         tf.TableID = field.ID;
@@ -138,7 +158,14 @@ namespace EZFormsPrototype.Controllers
                         tf.FormOrder = i;
                         db.TableFields.Add(tf);
                         db.SaveChanges();
+
+                        i++;
                     }
+                }
+                else
+                {
+                    //Drop any TableFields associated with this FormField if it is saved as something other than a table
+                    db.TableFields.RemoveRange(tfList);
                 }
                 //send to the parent form edit page
                 return RedirectToAction(data.Redirect);
