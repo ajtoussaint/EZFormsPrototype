@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "mssql2": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/EZFormsPrototype20231128045253/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsFormContext_E1FCE1E824",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/ezformsprototypedbserver/databases/EZFormsPrototype_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:FormContext"
+    },
+    "mssql3": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/EZFormsPrototype20231128045253/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsAuthConnection_553B2E8D66",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/ezformsprototypedbserver/databases/EZFormsPrototype_Authdb",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:AuthConnection"
+    }
+  }
+}

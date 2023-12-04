@@ -212,9 +212,12 @@
             html += '<div class=expressionBlock>'
             var code = '<input type="hidden" name="CodeExpression" value ="' + comparisonType + '(' + blockComparison + ', ';
             code += (comparisonType != "_single" ? tableField : blockField);
-            code += ', \'' + blockField2 + '\')" />';
+            if ($("#blockField2").find(":selected").val() == "#custom#") {
+                code += ', \'' + blockField2 + '\')" />';
+            } else {
+                code += ', ' + blockField2 + ')" />';
+            }
             html += code;
-            console.log(code);
             var view = '<input type="hidden" name="ViewExpression" value ="';
             if (comparisonType != "_single") {
                 var comparisonTypeName = $("#compType").find(":selected").text();

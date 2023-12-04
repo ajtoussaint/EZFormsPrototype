@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "EZFormsPrototype20231030134255",
+      "defaultValue": "EZFormsPrototype20231128045253",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }

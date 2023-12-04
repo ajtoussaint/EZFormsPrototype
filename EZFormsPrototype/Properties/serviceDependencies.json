@@ -1,8 +1,12 @@
 {
   "dependencies": {
-    "mssql1": {
+    "mssql2": {
       "type": "mssql",
-      "connectionId": "FormContext"
+      "connectionId": "ConnectionStrings:FormContext"
+    },
+    "mssql3": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:AuthConnection"
     }
   }
 }
